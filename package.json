@@ -1,6 +1,6 @@
 {
     "name": "or-ui-components",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -11,7 +11,7 @@
       "url": "git+https://github.com/or-ui/components.git"
     },
     "author": "onereach",
-    "license": "Apache 2.0 License",
+    "license": "(c) onereach.com",
     "bugs": {
       "url": "https://github.com/or-ui/components/issues"
     },
