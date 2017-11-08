@@ -4,12 +4,12 @@ export default [
         data: {
             header: ''
         },
-        design: require('./src/designers/header.vue').default,
+        design: require('./src/design/header.vue').default,
         label: 'Header'
     },
     {
         component: 'formDivider',
-        design: require('./src/designers/divider.vue').default,
+        design: require('./src/design/divider.vue').default,
         label: 'Divider'
     },
     // {
@@ -20,7 +20,7 @@ export default [
     //         renderCondition: '',
     //         inputs: []
     //     },
-    //     design: require('./src/designers/collapsible_group.vue').default,
+    //     design: require('./src/design/collapsible_group.vue').default,
     //     label: 'Collapsible Group'
     // },
     {
@@ -35,7 +35,7 @@ export default [
             variable: '',
             validateRequired: false
         },
-        design: require('./src/designers/textbox.vue').default,
+        design: require('./src/design/textbox.vue').default,
         label: 'Text box'
     },
     {
@@ -55,7 +55,7 @@ export default [
             notInCharLimitMessage: 'You have exceeded amount of characters that can be sent via a single SMS.',
             renderCondition: ''
         },
-        design: require('./src/designers/text_message.vue').default,
+        design: require('./src/design/text_message.vue').default,
         label: 'Text Message'
     },
     {
@@ -70,8 +70,8 @@ export default [
             validateExpression: false,
             validateCode: false
         },
-        design: require('./src/designers/code.vue').default,
-        edit: require('./src/editors/code.vue').default,
+        design: require('./src/design/code.vue').default,
+        edit: require('./src/edit/code.vue').default,
         label: 'Code'
     },
     {
@@ -88,12 +88,11 @@ export default [
             renderCondition: '',
             validateRequired: false
         },
-        design: require('./src/designers/select.vue').default,
+        design: require('./src/design/select.vue').default,
         label: 'Drop down'
     },
     {
         component: 'formList',
-        container: true,
         data: {
             label: '',
             variable: '',
@@ -104,7 +103,8 @@ export default [
             inputs: [],
             renderCondition: ''
         },
-        design: require('./src/designers/list.vue').default,
+        design: require('./src/design/list.vue').default,
+        isContainer: true,
         label: 'List'
     },
     {
@@ -116,7 +116,7 @@ export default [
             variable: '',
             renderCondition: ''
         },
-        design: require('./src/designers/switch.vue').default,
+        design: require('./src/design/switch.vue').default,
         label: 'Switch'
     },
     // {
@@ -132,7 +132,7 @@ export default [
     //         componentCompiledStyles: '',
     //         wildcardTemplates: []
     //     },
-    //     design: require('./src/designers/wildcard.vue').default,
+    //     design: require('./src/design/wildcard.vue').default,
     //     label: 'Wildcard'
     // },
     {
@@ -146,36 +146,39 @@ export default [
             helpText: 'Specify the name of the merge field where the step’s result will be stored and can be reused later in the flow.',
             validateRequired: false
         },
-        design: require('./src/designers/data_out.vue').default,
+        design: require('./src/design/data_out.vue').default,
+        isDataOut: true,
         label: 'Merge field'
     },
-    // {
-    //     component: 'formDynamicExits',
-    //     data: {
-    //         label: '',
-    //         variable: 'conditions',
-    //         addButtonLabel: '',
-    //         dragHandleRight: '',
-    //         hasDefaultItem: '',
-    //         renderCondition: '',
-    //         singleline: false,
-    //         labelFunction: 'return item.exitLabel',
-    //         inputs: [
-    //             {
-    //                 component: 'dynamicExitLabel',
-    //                 data: {
-    //                     defaultValue: '',
-    //                     label: '',
-    //                     placeholder: 'label',
-    //                     helpText: 'Exit label.'
-    //                 },
-    //                 label: 'Exit label'
-    //             }
-    //         ]
-    //     },
-    //     design: require('./src/designers/dynamic_exits.vue').default,
-    //     label: 'List'
-    // },
+    {
+        component: 'formDynamicExits',
+        data: {
+            label: '',
+            variable: 'conditions',
+            addButtonLabel: '',
+            dragHandleRight: '',
+            hasDefaultItem: '',
+            renderCondition: '',
+            singleline: false,
+            labelFunction: 'return item.exitLabel',
+            inputs: [
+                {
+                    component: 'dynamicExitLabel',
+                    data: {
+                        defaultValue: '',
+                        label: '',
+                        placeholder: 'label',
+                        helpText: 'Exit label.'
+                    },
+                    label: 'Exit label'
+                }
+            ]
+        },
+        design: require('./src/design/dynamic_exits.vue').default,
+        isContainer: true,
+        isExit: true,
+        label: 'List'
+    },
     // {
     //     component: 'formTextReprompt',
     //     data: {
@@ -194,7 +197,7 @@ export default [
     //         repeatMessage: 'Repeat the first message after the reprompt',
     //         renderCondition: ''
     //     },
-    //     design: require('./src/designers/text_reprompt.vue').default,
+    //     design: require('./src/design/text_reprompt.vue').default,
     //     label: 'Text Reprompt'
     // },
     // {
@@ -216,7 +219,7 @@ export default [
     //         repeatMessage: 'Repeat the first message after the reprompt',
     //         renderCondition: ''
     //     },
-    //     design: require('./src/designers/voice_reprompt.vue').default,
+    //     design: require('./src/design/voice_reprompt.vue').default,
     //     label: 'Voice Reprompt'
     // }
 ];

@@ -3,9 +3,9 @@
         <div class="wrapper">
             <div class="ui-textbox-label-text">{{header}}</div>
             <ul class="form-dynamic-exits step-input-list" v-dragula="inputs" bag="inputs">
-                <li :class="'component-' + input.component" v-for="(input, index) in inputs" :key="input.id">
+                <li :class="`design-${input.component}`" v-for="(input, index) in inputs" :key="input.id">
                     <or-icon class="handle" icon="drag_handle"></or-icon>
-                    <component :is="input.component" :input.sync="input"></component>
+                    <component :is="`design-${input.component}`" :input.sync="input"></component>
                     <or-icon-button type="flat" icon="close" class="remove-btn"
                                     @click="removeInput(index)">
                     </or-icon-button>
@@ -25,7 +25,7 @@
         <or-popover ref="componentsListPopover" trigger="triggerInputsList" dropdown-position="right middle"
                     close-on-blur>
             <ul class="list-available-inputs-list">
-                <li v-for="input in availableInputs" class="available-input">
+                <li v-for="input in usableInputs" class="available-input">
                     <or-button @click.prevent.stop="addInput(input)">{{ input.label }}</or-button>
                 </li>
             </ul>
@@ -78,47 +78,16 @@
 
 <script>
     import * as _ from 'lodash';
-    import availableInputs from '../../index.js';
-    import dynamicExitLabel from './dynamic_exits/exit_label';
-    import formCode from './code';
-    import formCollapsible from './collapsible_group';
-    import formDataOut from './data_out';
-    import formDivider from './divider';
-    import formHeader from './header';
-    import formList from './list';
-    import formSelect from './select';
-    import formSwitch from './switch';
-    import formTextBox from './textbox';
-    import formTextMessage from './text_message';
-    import formTextReprompt from './text_reprompt';
-    import formVoiceReprompt from './voice_reprompt';
-    import formWildcard from './wildcard';
+    import dynamicExitLabel from './exits/label.vue';
     import {messageBus} from 'or-ui';
     import uuid from 'uuid';
 
     export default {
         components : {
-            dynamicExitLabel,
-            formCode,
-            formCollapsible,
-            formDataOut,
-            formDivider,
-            formHeader,
-            formList,
-            formTextBox,
-            formTextMessage,
-            formSelect,
-            formSwitch,
-            formWildcard,
-            formTextReprompt,
-            formVoiceReprompt
+            'design-dynamicExitLabel': dynamicExitLabel
         },
 
         computed : {
-            availableInputs () {
-                return _.reject(availableInputs, input => _.includes(['formList', 'formCollapsible', 'formDataOut', 'formDynamicExits'], input.component));
-            },
-
             header () {
                 return this.input.data.label ? `${this.input.data.label} (Dynamic Exits)` : 'Dynamic Exits';
             },
@@ -129,6 +98,10 @@
 
             popupHeader () {
                 return `${this.input.data.label} Dynamic Exits Settings`;
+            },
+
+            usableInputs () {
+                return _.reject(this.availableInputs, 'isContainer');
             }
         },
 
@@ -138,7 +111,7 @@
             // it does not consistently adds them to the inner dragula lists and this weird "model update" is required
             // to fix the structures O_O
             // TODO update to vue2-dragula when there is a stable release
-            const dummyInput = this.addInput(_.find(availableInputs, {component : 'formHeader'}));
+            const dummyInput = this.addInput(_.find(this.availableInputs, {component : 'formHeader'}));
             this.$nextTick(() => {
                 this.removeInput(_.findIndex(this.input.data.inputs, {id : dummyInput.id}));
             });
@@ -167,12 +140,13 @@
             }
         },
 
-        props : ['input']
+        props : ['input', 'availableInputs']
     };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors';
+    // TODO @import '../../../../../../scss/colors';
+    $silver-grey : #bbbbbb;
 
     .gu-mirror {
         display: none;

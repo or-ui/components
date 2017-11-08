@@ -24,7 +24,7 @@
         <or-popover ref="componentsListPopover" trigger="triggerInputsList" dropdown-position="right middle"
                     close-on-blur>
             <ul class="list-available-inputs-list">
-                <li v-for="input in nonContainerInputs" class="available-input">
+                <li v-for="input in usableInputs" class="available-input">
                     <or-button class="input-component"
                                type="secondary"
                                color="primary"
@@ -87,12 +87,12 @@
                 return this.input.data.inputs;
             },
 
-            nonContainerInputs () {
-                return _.reject(this.availableInputs, 'container');
-            },
-
             popupHeader () {
                 return `${this.input.data.label} List Settings`;
+            },
+
+            usableInputs () {
+                return _.reject(this.availableInputs, 'isContainer');
             }
         },
 
