@@ -1,20 +1,91 @@
 {
+  "_args": [
+    [
+      {
+        "raw": "or-ui-components",
+        "scope": null,
+        "escapedName": "or-ui-components",
+        "name": "or-ui-components",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/vladyslav"
+    ]
+  ],
+  "_from": "or-ui-components@latest",
+  "_id": "or-ui-components@1.0.1-alpha-30",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/or-ui-components",
+  "_nodeVersion": "8.4.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/or-ui-components-1.0.1-alpha-30.tgz_1510741337309_0.19984195311553776"
+  },
+  "_npmUser": {
+    "name": "or-ui",
+    "email": "kostya.kopytov@onereach.com"
+  },
+  "_npmVersion": "5.5.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "or-ui-components",
+    "scope": null,
+    "escapedName": "or-ui-components",
     "name": "or-ui-components",
-    "version": "1.0.1-alpha-20",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/or-ui/components.git"
-    },
-    "author": "onereach",
-    "license": "(c) onereach.com",
-    "bugs": {
-      "url": "https://github.com/or-ui/components/issues"
-    },
-    "homepage": "https://github.com/or-ui/components#readme"
-  }
-  
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/or-ui-components/-/or-ui-components-1.0.1-alpha-30.tgz",
+  "_shasum": "6296c508f22bc236885554ad3507b0858a5a3f2b",
+  "_shrinkwrap": null,
+  "_spec": "or-ui-components",
+  "_where": "/Users/vladyslav",
+  "author": {
+    "name": "onereach"
+  },
+  "bugs": {
+    "url": "https://github.com/or-ui/components/issues"
+  },
+  "dependencies": {},
+  "description": "https://studio.onereach.ai default components",
+  "devDependencies": {
+    "eslint": "^4.10.0",
+    "eslint-plugin-html": "^3.2.2",
+    "http-server": "^0.10.0"
+  },
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-pN2KbpMg/zo/ho4RB5+JNjQPan3pwEgcs2AHv8bzhCbBbb6W+e/98xBpP8ipusYk1wVeDziNCEYjBA4GBHAW8w==",
+    "shasum": "6296c508f22bc236885554ad3507b0858a5a3f2b",
+    "tarball": "https://registry.npmjs.org/or-ui-components/-/or-ui-components-1.0.1-alpha-30.tgz"
+  },
+  "gitHead": "6911e00c2988d3a0d32666431bf551e3e032b3af",
+  "homepage": "https://github.com/or-ui/components#readme",
+  "license": "(c) onereach.com",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "or-ui",
+      "email": "kostya.kopytov@onereach.com"
+    }
+  ],
+  "name": "or-ui-components",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/or-ui/components.git"
+  },
+  "scripts": {
+    "format": "prettier --write",
+    "start": "http-server --cors",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.1-alpha-30"
+}

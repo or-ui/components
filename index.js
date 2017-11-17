@@ -1,15 +1,8 @@
+/*
 export default [
     {
-        component: 'formHeader',
-        data: {
-            header: ''
-        },
-        design: require('./src/design/header.vue').default,
-        label: 'Header'
-    },
-    {
         component: 'formDivider',
-        design: require('./src/design/divider.vue').default,
+        design: require('./src/design/divider').default,
         label: 'Divider'
     },
     // {
@@ -20,24 +13,9 @@ export default [
     //         renderCondition: '',
     //         inputs: []
     //     },
-    //     design: require('./src/design/collapsible_group.vue').default,
+    //     design: require('./src/design/collapsible_group').default,
     //     label: 'Collapsible Group'
     // },
-    {
-        component: 'formTextBox',
-        data: {
-            defaultValue: '``',
-            label: '',
-            multiline: false,
-            placeholder: '',
-            helpText: '',
-            renderCondition: '',
-            variable: '',
-            validateRequired: false
-        },
-        design: require('./src/design/textbox.vue').default,
-        label: 'Text box'
-    },
     {
         component: 'formTextMessage',
         data: {
@@ -55,41 +33,8 @@ export default [
             notInCharLimitMessage: 'You have exceeded amount of characters that can be sent via a single SMS.',
             renderCondition: ''
         },
-        design: require('./src/design/text_message.vue').default,
+        design: require('./src/design/text_message').default,
         label: 'Text Message'
-    },
-    {
-        component: 'formCode',
-        data: {
-            defaultValue: '',
-            label: '',
-            variable: '',
-            helpText: '',
-            renderCondition: '',
-            validateRequired: false,
-            validateExpression: false,
-            validateCode: false
-        },
-        design: require('./src/design/code.vue').default,
-        edit: require('./src/edit/code.vue').default,
-        label: 'Code'
-    },
-    {
-        component: 'formSelect',
-        data: {
-            defaultArrayValue: [],
-            defaultValue: '',
-            label: '',
-            multiple: false,
-            options: [],
-            placeholder: '',
-            helpText: '',
-            variable: '',
-            renderCondition: '',
-            validateRequired: false
-        },
-        design: require('./src/design/select.vue').default,
-        label: 'Drop down'
     },
     {
         component: 'formList',
@@ -103,7 +48,7 @@ export default [
             inputs: [],
             renderCondition: ''
         },
-        design: require('./src/design/list.vue').default,
+        design: require('./src/design/list').default,
         isContainer: true,
         label: 'List'
     },
@@ -116,25 +61,17 @@ export default [
             variable: '',
             renderCondition: ''
         },
-        design: require('./src/design/switch.vue').default,
+        design: require('./src/design/switch').default,
         label: 'Switch'
     },
-    // {
-    //     component: 'formWildcard',
-    //     data: {
-    //         formTemplate: '',
-    //         componentTemplate: '<div><or-textbox name="wildcardInput" label="wildcard Input Label" v-model="computedValue"></or-textbox></div>',
-    //         componentLogic:
-    //             "{\n  computed : {\n    computedValue : {\n      get () { return this.value; },\n      set (value) { this.$emit('input', value); }\n    }\n  },\n  props : {\n    value : {\n      type : String,\n      default : ''\n    }\n  }\n}",
-    //         data: '{"stepVariable": "defaultValue"}',
-    //         validators: '{}',
-    //         componentOriginalStyles: '',
-    //         componentCompiledStyles: '',
-    //         wildcardTemplates: []
-    //     },
-    //     design: require('./src/design/wildcard.vue').default,
-    //     label: 'Wildcard'
-    // },
+    {
+        component: 'formWildcard',
+        data: {
+        },
+        design: require('./src/design/wildcard').default,
+        edit: require('./src/edit/wildcard').default,
+        label: 'Wildcard'
+    },
     {
         component: 'formDataOut',
         data: {
@@ -146,7 +83,7 @@ export default [
             helpText: 'Specify the name of the merge field where the step’s result will be stored and can be reused later in the flow.',
             validateRequired: false
         },
-        design: require('./src/design/data_out.vue').default,
+        design: require('./src/design/data_out').default,
         isDataOut: true,
         label: 'Merge field'
     },
@@ -174,7 +111,7 @@ export default [
                 }
             ]
         },
-        design: require('./src/design/dynamic_exits.vue').default,
+        design: require('./src/design/dynamic_exits').default,
         isContainer: true,
         isExit: true,
         label: 'List'
@@ -197,7 +134,7 @@ export default [
     //         repeatMessage: 'Repeat the first message after the reprompt',
     //         renderCondition: ''
     //     },
-    //     design: require('./src/design/text_reprompt.vue').default,
+    //     design: require('./src/design/text_reprompt').default,
     //     label: 'Text Reprompt'
     // },
     // {
@@ -219,7 +156,33 @@ export default [
     //         repeatMessage: 'Repeat the first message after the reprompt',
     //         renderCondition: ''
     //     },
-    //     design: require('./src/design/voice_reprompt.vue').default,
+    //     design: require('./src/design/voice_reprompt').default,
     //     label: 'Voice Reprompt'
     // }
 ];
+*/
+
+export default [
+    require('./src/inputs/code'),
+    require('./src/inputs/collapsible_group'),
+    require('./src/inputs/data_out'),
+    // // require('./src/inputs/dividier'),
+    // // require('./src/inputs/dynamic_exits'),
+    require('./src/inputs/header'),
+    require('./src/inputs/list'),
+    // // require('./src/inputs/select'),
+    // // require('./src/inputs/switch'),
+    // // require('./src/inputs/text_message'),
+    // // require('./src/inputs/text_reprompt'),
+    require('./src/inputs/textbox'),
+    // // require('./src/inputs/voice_reprompt'),
+    require('./src/inputs/wildcard')
+    // // require('./src/luis/wrapper')
+];
+
+export const meta = {
+    name    : 'or-ui-components',
+    type    : 'onereach-studio-plugin',
+    label   : 'Default components',
+    version : '1.0'
+};

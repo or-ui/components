@@ -1,13 +1,14 @@
 <template>
-    <div class="list-input-component-wrapper">
+    <div class="dynamic-exists-input-wrapper">
         <div class="wrapper">
             <div class="ui-textbox-label-text">{{header}}</div>
-            <ul class="form-or-list step-input-list" v-dragula="inputs" bag="inputs">
+            <ul class="form-dynamic-exits step-input-list" v-dragula="inputs" bag="inputs">
                 <li :class="`design-${input.component}`" v-for="(input, index) in inputs" :key="input.id">
                     <or-icon class="handle" icon="drag_handle"></or-icon>
                     <component :is="`design-${input.component}`" :input.sync="input"></component>
                     <or-icon-button type="flat" icon="close" class="remove-btn"
-                                    @click="removeInput(index)"></or-icon-button>
+                                    @click="removeInput(index)">
+                    </or-icon-button>
                 </li>
             </ul>
             <div class="button-bar">
@@ -25,20 +26,18 @@
                     close-on-blur>
             <ul class="list-available-inputs-list">
                 <li v-for="input in usableInputs" class="available-input">
-                    <or-button class="input-component"
-                               type="secondary"
-                               color="primary"
-                               @click.prevent.stop="addInput(input)">{{ input.label }}
-                    </or-button>
+                    <or-button @click.prevent.stop="addInput(input)">{{ input.label }}</or-button>
                 </li>
             </ul>
         </or-popover>
 
-        <or-modal ref="listModal" :remove-close-button="true" :title="popupHeader" class="from-list-settings"
+        <or-modal ref="dynamicExitsModal" :remove-close-button="true"
+                  :title="popupHeader"
+                  class="form-dynamic-exits-settings"
                   :contain-focus="false">
-            <or-textbox name="label" label="Text" placeholder="label text"
-                        v-model="input.data.label"
-                        help="list label"></or-textbox>
+            <or-textbox name="label" label="Text" placeholder="label text" v-model="input.data.label"
+                        help="list label">
+            </or-textbox>
 
             <or-textbox name="variable" label="Variable" placeholder="enter variable name"
                         v-model="input.data.variable"
@@ -49,21 +48,28 @@
                         help="add button label"></or-textbox>
 
             <or-switch name="dragHandleRight" label="Drag Handle Right"
-                       v-model="input.data.dragHandleRight"></or-switch>
+                       v-model="input.data.dragHandleRight">
+            </or-switch>
 
             <or-switch name="singleline" label="Singleline" v-model="input.data.singleline"></or-switch>
 
             <or-switch name="hasDefaultItem" label="Has one item by default"
-                       v-model="input.data.hasDefaultItem"></or-switch>
+                       v-model="input.data.hasDefaultItem">
+            </or-switch>
+
+            <or-code label="Exit label function" v-model="input.data.labelFunction"
+                     help="how to calculate exit label">
+            </or-code>
 
             <or-textbox name="renderCondition" label="Conditional rendering" placeholder="rule"
                         v-model="input.data.renderCondition"
-                        help="conditional rendering rule"></or-textbox>
+                        help="conditional rendering rule">
+            </or-textbox>
 
             <div slot="footer">
                 <or-button color="primary"
                            type="secondary"
-                           @click.prevent="$refs.listModal.close()">Close
+                           @click.prevent="$refs.dynamicExitsModal.close()">Close
                 </or-button>
             </div>
         </or-modal>
@@ -72,15 +78,18 @@
 
 <script>
     import * as _ from 'lodash';
+    import dynamicExitLabel from './exits/label';
     import {messageBus} from 'or-ui';
     import uuid from 'uuid';
 
-    const componentRandomNamePartLength = 16;
-
     export default {
+        components : {
+            'design-dynamicExitLabel': dynamicExitLabel
+        },
+
         computed : {
             header () {
-                return this.input.data.label || 'List';
+                return this.input.data.label ? `${this.input.data.label} (Dynamic Exits)` : 'Dynamic Exits';
             },
 
             inputs () {
@@ -88,19 +97,11 @@
             },
 
             popupHeader () {
-                return `${this.input.data.label} List Settings`;
+                return `${this.input.data.label} Dynamic Exits Settings`;
             },
 
             usableInputs () {
                 return _.reject(this.availableInputs, 'isContainer');
-            }
-        },
-
-        created () {
-            if (!this.input.data.componentName) {
-                const letters = 'abcdefghijklmnopqrstuvwxyz';
-                const id = _.sampleSize(letters, componentRandomNamePartLength).join('');
-                this.input.data.componentName = `or-list-${id}`;
             }
         },
 
@@ -135,7 +136,7 @@
             },
 
             showSettings () {
-                this.$refs.listModal.open();
+                this.$refs.dynamicExitsModal.open();
             }
         },
 
@@ -144,14 +145,13 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    // TODO @import '../scss/colors';
-    $silver-grey : #bbbbbb;
+    @import '../scss/colors';
 
     .gu-mirror {
         display: none;
     }
 
-    .list-input-component-wrapper {
+    .dynamic-exists-input-wrapper {
         padding: 10px;
         flex-grow: 1;
         .wrapper {
@@ -191,7 +191,6 @@
                 button {
                     border: none;
                     padding: 0;
-                    min-width: inherit;
                     &.add-form-component {
                         margin-left: auto;
                     }
@@ -204,19 +203,18 @@
 <style lang="scss" rel="stylesheet/scss">
     ul.list-available-inputs-list {
         list-style: none;
-        padding: 10px;
+        padding: 0;
         margin: 0;
 
-        li.available-input {
+        li {
             margin: 0 0 5px 0;
-            button.input-component {
+            button {
                 width: 100px;
-                height: auto;
             }
         }
     }
 
-    .form-list-settings {
+    .form-dynamic-exits-settings {
         .ui-modal__container {
             display: flex;
             flex-direction: column;

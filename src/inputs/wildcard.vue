@@ -6,7 +6,12 @@
                 <span v-if="componentLogicError" class="logic-error">
                     Component can not be displayed because of the error in its logic
                 </span>
-                <component v-else :is="componentTempName" @click.native.prevent></component>
+                <editor @click.native.prevent
+                        :template="input.data"
+                        :step="safeStep"
+                        :steps="[safeStep]"
+                        :readonly="true">
+                </editor>
                 <div class="cover"></div>
             </div>
         </div>
@@ -83,54 +88,35 @@
 <script>
     import * as _ from 'lodash';
     import declareTemplates from './wildcard/declare_templates.vue';
-    import later from 'later';
-    import moment from 'moment-timezone';
     import {OrList} from 'or-ui';
     import Promise from 'bluebird';
-    import registerComponent from '../../../../../../helpers/register_component';
-    import stepMessageBus from '../../../../../../step_message_bus';
-    import timestring from 'timestring';
-    import uuid from 'uuid';
-    import {validators} from '../../../../../../validators';
+    // import stepMessageBus from '../../../../../../step_message_bus';
+    import {validators} from '../validators';
     import Vue from 'vue';
-    import wildcard from '../../../../../../mixins/generate_step_form/wildcard';
-
-    const componentRandomNamePartLength = 16;
+    import editor from './editors/wildcard.vue';
 
     export default {
-        props : ['input'],
+        props : ['input', 'step'],
 
         components : {
-            declareTemplates
+            declareTemplates,
+            editor
         },
 
         data () {
             return {
-                componentTempName   : '',
                 componentLogicError : false,
                 popupOpened         : false
             };
         },
 
-        created () {
-            if (!this.input.data.componentName) {
-                this.input.data.componentName = this.createComponentName();
-            }
-            if (!this.input.data.formTemplate) {
-                this.input.data.formTemplate = `<${this.input.data.componentName} v-model="schema.stepVariable"></${this.input.data.componentName}>`;
-            }
-            this.updateComponentRegistration();
-        },
-
-        beforeDestroy () {
-            if (this.componentTempName) {
-                registerComponent.unregister(this.componentTempName);
-            }
-        },
-
         computed : {
             popupHeader () {
                 return 'Wildcard Component Settings';
+            },
+
+            safeStep () {
+                return this.step || {data : {}};
             }
         },
 
@@ -143,60 +129,39 @@
             },
 
             closeSettingsPopup () {
-                this.updateComponentRegistration();
+                // this.updateComponentRegistration();
                 this.$refs.wildcardModal.close();
                 this.popupOpened = false;
-            },
-
-            createComponentName () {
-                const letters = 'abcdefghijklmnopqrstuvwxyz';
-                const id = _.sampleSize(letters, componentRandomNamePartLength).join('');
-                return `or-wildcard-${id}`;
-            },
-
-            updateComponentRegistration () {
-                const newComponentName = this.createComponentName();
-
-                const libs = {
-                    uuid,
-                    later,
-                    moment,
-                    timestring
-                };
-                const components = {
-                    list : Vue.extend(OrList)
-                };
-
-                const args = {_, Vue, Promise, components, uuid, libs, eventHub : stepMessageBus, validators};
-
-                registerComponent.register({
-                    name        : newComponentName,
-                    template    : `<div class="${newComponentName}">${this.input.data.componentTemplate}</div>`,
-                    code        : wildcard.generateComponentLogic(this.input.data.componentLogic, this.input.data.wildcardTemplates),
-                    style       : this.input.data.componentOriginalStyles,
-                    noWrapStyle : true,
-                    args
-                })
-                    .then(() => {
-                        if (this.componentTempName) {
-                            registerComponent.unregister(this.componentTempName);
-                        }
-                        this.componentTempName = newComponentName;
-                        this.componentLogicError = false;
-                    })
-                    .catch(() => {
-                        this.componentLogicError = true;
-                    });
             }
         }
     };
+
+    export const label = 'Wildcard';
+    export const data = {
+        formTemplate            : '<custom v-model="schema.stepVariable"></custom>',
+        componentTemplate       : '<div><or-textbox name="wildcardInput" label="wildcard Input Label" v-model="computedValue"></or-textbox></div>',
+        componentLogic          :
+            "{\n  computed : {\n    computedValue : {\n      get () { return this.value; },\n      set (value) { this.$emit('input', value); }\n    }\n  },\n  props : {\n    value : {\n      type : String,\n      default : ''\n    }\n  }\n}",
+        data                    : '{"stepVariable": "defaultValue"}',
+        validators              : '{}',
+        componentOriginalStyles : '',
+        componentCompiledStyles : '',
+        wildcardTemplates       : []
+    };
+
+    export const meta = {
+        name    : 'formWildcard',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
+
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors';
+    @import '../scss/colors';
 
-    .wildcard-input-component-wrapper {
-        display: inline-block;
+    & {
+        display: flex;
         flex-grow: 1;
         padding: 10px;
         .wrapper {

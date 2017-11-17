@@ -1,9 +1,8 @@
 <template>
     <div class="code-input-component-wrapper">
-        <div class="or-code-wrapper wrapper" @click="$refs.codeSettings.open()">
-            <or-code :name="input.data.variable" :label="input.data.label" :help-text="input.data.helpText"
-                     :value="label" :readonly="true">
-            </or-code>
+        <div class="or-code-wrapper wrapper" @click.prevent="$refs.codeSettings.open()">
+            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            </editor>
         </div>
 
         <or-modal ref="codeSettings" :remove-close-button="true"
@@ -55,16 +54,23 @@
 </template>
 
 <script>
+    import base from './_design_base.vue';
+    import editor from './editors/code.vue';
+
     export default {
-        props : ['input'],
+        extends : base,
+
+        components : {
+            editor
+        },
 
         computed : {
-            popupHeader () {
-                return `${this.input.data.label} Code Settings`;
-            },
-
             label () {
                 return this.input.data.defaultValue || 'Code';
+            },
+
+            popupHeader () {
+                return `${this.input.data.label} Code Settings`;
             },
 
             validateCode : {
@@ -94,6 +100,25 @@
             }
         }
     };
+
+    export const label = 'Code';
+    export const data = {
+        defaultValue       : '',
+        label              : '',
+        variable           : '',
+        helpText           : '',
+        renderCondition    : '',
+        validateRequired   : false,
+        validateExpression : false,
+        validateCode       : false
+    };
+
+    export const meta = {
+        name    : 'formCode',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
+
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">

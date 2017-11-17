@@ -5,7 +5,10 @@
                 <ul class="step-input-list" v-dragula="inputs" bag="inputs">
                     <li :class="'component-' + input.component" v-for="(input, index) in inputs" :key="input.id">
                         <or-icon class="handle" icon="drag_handle"></or-icon>
-                        <component :is="input.component" :input.sync="input"></component>
+                        <component
+                            :is="getInputDesign(input.component)"
+                            :input="input">
+                        </component>
                         <or-icon-button type="flat" icon="close" class="remove-btn"
                                         @click="removeInput(index)"></or-icon-button>
                     </li>
@@ -66,49 +69,32 @@
 
 <script>
     import * as _ from 'lodash';
-    import availableInputs from '../available_inputs.json';
-    import formCode from './code';
-    import formCollapsible from './collapsible_group';
-    import formDataOut from './data_out';
-    import formDivider from './divider';
-    import formDynamicExits from './dynamic_exits';
-    import formHeader from './header';
-    import formList from './list';
-    import formSelect from './select';
-    import formSwitch from './switch';
-    import formTextBox from './textbox';
-    import formTextMessage from './text_message';
-    import formTextReprompt from './text_reprompt';
-    import formVoiceReprompt from './voice_reprompt';
-    import formWildcard from './wildcard';
+    import editor from './editors/collapsible_group.vue';
+
+    import {mapGetters} from 'vuex';
     import {messageBus} from 'or-ui';
     import uuid from 'uuid';
 
     export default {
         components : {
-            formCode,
-            formCollapsible,
-            formDataOut,
-            formDivider,
-            formDynamicExits,
-            formHeader,
-            formList,
-            formTextBox,
-            formTextMessage,
-            formSelect,
-            formSwitch,
-            formWildcard,
-            formTextReprompt,
-            formVoiceReprompt
+            editor
         },
 
         computed : {
+            ...mapGetters('plugins', [
+                'getInputDesign',
+                'getAvailableInputs'
+            ]),
+
             popupHeader () {
                 return `${this.input.data.header} Collapsible Group Settings`;
             },
 
             availableInputs () {
-                return _.reject(availableInputs, input => _.includes(['formCollapsible', 'formDataOut', 'formDynamicExits'], input.component));
+                console.log('COLLPAS:::::::', this.getAvailableInputs());
+                return this.getAvailableInputs();
+                // TODO
+                //return _.reject(inputs, input => _.includes(['formCollapsible', 'formDataOut', 'formDynamicExits'], input.component));
             },
 
             defaultStateLabel () {
@@ -130,7 +116,7 @@
             // it does not consistently adds them to the inner dragula lists and this weird "model update" is required
             // to fix the structures O_O
             // TODO update to vue2-dragula when there is a stable release
-            const dummyInput = this.addInput(_.find(availableInputs, {component : 'formHeader'}));
+            const dummyInput = this.addInput(_.find(this.availableInputs, {component : 'formHeader'}));
             this.$nextTick(() => {
                 this.removeInput(_.findIndex(this.input.data.inputs, {id : dummyInput.id}));
             });
@@ -161,10 +147,24 @@
 
         props : ['input']
     };
+
+    export const label = 'Collapsible Group';
+    export const data = {
+        header: '',
+        open: true,
+        renderCondition: '',
+        inputs: []
+    };
+
+    export const meta = {
+        name    : 'formCollapsible',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors';
+    @import '../scss/colors';
 
     .gu-mirror {
         display: none;
@@ -172,7 +172,7 @@
 
     .collapsible-group-wrapper {
         padding: 0 10px;
-        display: inline-block;
+        display: flex;
         flex-grow: 1;
         .wrapper {
             .collapsible-group {

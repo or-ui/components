@@ -1,11 +1,14 @@
 <template>
     <div class="select-list-component-wrapper">
         <div class="wrapper" @click="$refs.selectModal.open()">
+            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            </editor>
+<!--
             <or-select v-if="input.data.multiple" :name="input.data.variable" :label="input.data.label"
-                       :placeholder="defaultArrayValue" :disabled="true"></or-select>
+                       :placeholder="placeholder" :options="options" v-model="defaultArrayValue" :disabled="true"></or-select>
             <or-select v-else :name="input.data.variable" :label="input.data.label"
                        :placeholder="placeholder" :options="options" v-model="input.data.defaultValue"
-                       :disabled="true"></or-select>
+                       :disabled="true"></or-select> -->
         </div>
 
         <or-modal ref="selectModal" :remove-close-button="true"
@@ -66,11 +69,34 @@
 <script>
     import _ from 'lodash';
     import {OrList} from 'or-ui';
-    import selectOption from './select/option.vue';
+    import selectOption from './select/option';
     import Vue from 'vue';
 
+    import base from './_design_base';
+    import editor from './editors/select';
+
     export default {
-        props : ['input'],
+        extends : base,
+
+        components : {
+            editor,
+            selectOptions : {
+                extends : OrList,
+
+                components : {
+                    selectOption
+                },
+
+                methods : {
+                    getNewItem () {
+                        return {
+                            value : '',
+                            label : ''
+                        };
+                    }
+                }
+            }
+        },
 
         data () {
             return {
@@ -79,6 +105,14 @@
         },
 
         computed : {
+            defaultStep () {
+                return this.step || {
+                    data : {
+                        [this.input.data.variable] : this.input.data.multiple ? this.defaultArrayValue : this.input.data.defaultValue
+                    }
+                };
+            },
+
             popupHeader () {
                 return `${this.input.data.label || this.input.data.placeholder} Drop down Settings`;
             },
@@ -94,23 +128,6 @@
             defaultArrayValue () {
                 return _.map(this.input.data.defaultArrayValue, value => _.find(this.input.data.options, {value}).text).join(', ') || this.placeholder;
             }
-        },
-
-        components : {
-            selectOptions : Vue.extend(OrList).extend({
-                components : {
-                    selectOption
-                },
-
-                methods : {
-                    getNewItem () {
-                        return {
-                            value : '',
-                            label : ''
-                        };
-                    }
-                }
-            })
         },
 
         watch : {
@@ -129,6 +146,24 @@
             }
         }
     };
+
+    export const component = 'formSelect';
+    export const label = 'Drop down';
+    export const data = {
+        defaultArrayValue: [],
+        defaultValue: '',
+        label: '',
+        multiple: false,
+        options: [],
+        placeholder: '',
+        helpText: '',
+        variable: '',
+        renderCondition: '',
+        validateRequired: false
+    };
+
+    export const metaType = 'onereach.studio.form.input';
+    export const metaVersion = '1.0';
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">

@@ -1,9 +1,8 @@
 <template>
-    <div class="textbox-input-component-wrapper">
+    <div>
         <div class="wrapper" @click="$refs.textboxModal.open()">
-            <or-text-expression :label="label" :help-text="input.data.helpText" :placeholder="input.data.placeholder"
-                                :value="input.data.defaultValue" :multi-line="input.data.multiline"
-                                :readonly="true"></or-text-expression>
+            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            </editor>
         </div>
 
         <or-modal ref="textboxModal" :remove-close-button="true"
@@ -47,25 +46,50 @@
 </template>
 
 <script type="text/babel">
+    import base from './_design_base';
+    import editor from './editors/textbox';
+
     export default {
-        props : ['input'],
+        extends : base,
+
+        components : {
+            editor
+        },
 
         computed : {
-            popupHeader () {
-                return `${this.input.data.label || this.input.data.placeholder} Text box Settings`;
-            },
-
             label () {
                 return this.input.data.label || `Text box ${this.input.data.multiline ? '(Multi-line)' : '(Single line)'}`;
+            },
+
+            popupHeader () {
+                return `${this.input.data.label || this.input.data.placeholder} Text box Settings`;
             }
         }
+    };
+
+    export const label = 'Text box';
+    export const data = {
+        defaultValue     : '``',
+        label            : 'Text box',
+        multiline        : false,
+        placeholder      : '',
+        helpText         : '',
+        renderCondition  : '',
+        variable         : '',
+        validateRequired : false
+    };
+
+    export const meta = {
+        name    : 'formTextBox',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    .textbox-input-component-wrapper {
+    & {
         padding: 0 10px;
-        display: inline-block;
+        display: flex;
         flex-grow: 1;
         .wrapper {
             &:hover {
