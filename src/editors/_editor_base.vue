@@ -20,7 +20,7 @@
             },
             renderCondition () {
                 try {
-                    return this.evalRenderCondition(this.step.data);
+                    return this.evalRenderCondition(this.schema);
                 } catch (error) {
                     console.warn('renderCondition', error, this.template.renderCondition);
                     return true;
@@ -28,21 +28,25 @@
             },
             value : {
                 get () {
-                    return this.step.data[this.template.variable];
+                    return this.schema[this.template.variable];
                 },
                 set (value) {
-                    this.$set(this.step.data, this.template.variable, value);
+                    this.$set(this.schema, this.template.variable, value);
                 }
+            },
+
+            stepId () {
+                return this.step.id;
             }
         },
         data () {
             return {};
         },
-        props : ['template', 'step', 'steps', 'readonly'],
-        watch : {
+        props    : ['template', 'schema', 'step', 'steps', 'readonly'],
+        watch    : {
             'template.variable' (newVar, oldVar) {
-                this.$set(this.step.data, newVar, this.step.data[oldVar]);
-                this.$delete(this.step.data, oldVar);
+                this.$set(this.schema, newVar, this.schema[oldVar]);
+                this.$delete(this.schema, oldVar);
             }
         }
     };

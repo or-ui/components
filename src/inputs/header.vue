@@ -1,7 +1,7 @@
 <template>
     <div class="header-input">
         <div class="wrapper" @click="$refs.headerModal.open()">
-            <editor :template="input.data"></editor>
+            <editor :template="input.data" :schema="defaultStep.data"></editor>
         </div>
 
         <or-modal ref="headerModal" :remove-close-button="true"
@@ -19,14 +19,14 @@
 </template>
 
 <script>
-    import editor from './editors/header';
+    import base from './_design_base.vue';
+    import editor from '../editors/header';
 
     export default {
+        extends    : base,
         components : {
             editor
         },
-
-        props : ['input'],
 
         computed : {
             label () {
@@ -35,17 +35,13 @@
 
             popupHeader () {
                 return `${this.input.data.header} Header Settings`;
-            },
-
-            step () {
-                return {data : {}};
             }
         }
     };
 
     export const label = 'Header';
     export const data = {
-        header : ''
+        header : 'Header'
     };
 
     export const meta = {
@@ -56,11 +52,14 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
+    div {
+        display: flex;
+        flex-grow: 1;
+    }
+
     .header-input {
         .wrapper {
             padding: 0 10px;
-            display: flex;
-            flex-grow: 1;
         }
     }
 </style>

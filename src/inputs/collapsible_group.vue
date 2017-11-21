@@ -69,7 +69,7 @@
 
 <script>
     import * as _ from 'lodash';
-    import editor from './editors/collapsible_group.vue';
+    import editor from '../editors/collapsible_group.vue';
 
     import {mapGetters} from 'vuex';
     import {messageBus} from 'or-ui';
@@ -150,10 +150,10 @@
 
     export const label = 'Collapsible Group';
     export const data = {
-        header: '',
-        open: true,
-        renderCondition: '',
-        inputs: []
+        header          : '',
+        open            : true,
+        renderCondition : '',
+        inputs          : []
     };
 
     export const meta = {

@@ -31,4 +31,9 @@
         }
     };
 
+    export const meta = {
+        name    : 'formCollapsible',
+        type    : 'onereach-studio-form-editor',
+        version : '1.0'
+    };
 </script>

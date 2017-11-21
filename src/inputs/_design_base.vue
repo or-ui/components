@@ -2,7 +2,7 @@
     export default {
         computed : {
             defaultValue () {
-                return this.template.defaultValue;
+                return this.input.data.defaultValue;
             },
             defaultStep () {
                 return this.step || {
@@ -15,6 +15,6 @@
                 return !this.step;
             }
         },
-        props : ['input', 'step']
+        props    : ['input', 'step']
     };
 </script>

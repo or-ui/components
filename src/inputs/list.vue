@@ -3,9 +3,14 @@
         <div class="wrapper">
             <div class="ui-textbox-label-text">{{header}}</div>
             <ul class="form-or-list step-input-list" v-dragula="inputs" bag="inputs">
-                <li :class="`design-${input.component}`" v-for="(input, index) in inputs" :key="input.id">
+                <li :class="`design-${innerInput.component}`" v-for="(innerInput, index) in inputs"
+                    :key="innerInput.id">
                     <or-icon class="handle" icon="drag_handle"></or-icon>
-                    <component :is="`design-${input.component}`" :input.sync="input"></component>
+                    <component
+                        :is="getInputDesign(innerInput.component)"
+                        :step="step"
+                        :input="innerInput">
+                    </component>
                     <or-icon-button type="flat" icon="close" class="remove-btn"
                                     @click="removeInput(index)"></or-icon-button>
                 </li>
@@ -72,13 +77,26 @@
 
 <script>
     import * as _ from 'lodash';
+    import {mapGetters} from 'vuex';
     import {messageBus} from 'or-ui';
     import uuid from 'uuid';
+    import base from './_design_base.vue';
+    import editor from '../editors/list.vue';
 
     const componentRandomNamePartLength = 16;
 
     export default {
+        extends    : base,
+        components : {
+            editor
+        },
+
         computed : {
+            ...mapGetters('plugins', [
+                'getInputDesign',
+                'getAvailableInputs'
+            ]),
+
             header () {
                 return this.input.data.label || 'List';
             },
@@ -94,6 +112,18 @@
             usableInputs () {
                 return this.availableInputs;
                 // return _.reject(this.availableInputs, 'isContainer');
+            },
+
+            availableInputs () {
+                return this.getAvailableInputs();
+            },
+
+            defaultValue () {
+                return {
+                    data : {
+                        inputs : []
+                    }
+                };
             }
         },
 
@@ -130,9 +160,7 @@
             showSettings () {
                 this.$refs.listModal.open();
             }
-        },
-
-        props : ['input', 'availableInputs']
+        }
     };
 
     export const label = 'List';

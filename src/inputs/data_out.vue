@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="wrapper" @click="$refs.dataOutModal.open()">
-            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            <editor :template="input.data" :schema="defaultStep.data" :step="defaultStep" :steps="[defaultStep]"
+                    :readonly="readonly">
             </editor>
         </div>
 
@@ -46,7 +47,7 @@
 
 <script>
     import base from './_design_base';
-    import editor from './editors/data_out';
+    import editor from '../editors/data_out';
 
     export default {
         extends    : base,

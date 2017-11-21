@@ -1,14 +1,15 @@
 <template>
     <div class="select-list-component-wrapper">
         <div class="wrapper" @click="$refs.selectModal.open()">
-            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            <editor :template="input.data" :step="defaultStep"
+                    :steps="[defaultStep]" :readonly="readonly">
             </editor>
-<!--
-            <or-select v-if="input.data.multiple" :name="input.data.variable" :label="input.data.label"
-                       :placeholder="placeholder" :options="options" v-model="defaultArrayValue" :disabled="true"></or-select>
-            <or-select v-else :name="input.data.variable" :label="input.data.label"
-                       :placeholder="placeholder" :options="options" v-model="input.data.defaultValue"
-                       :disabled="true"></or-select> -->
+            <!--
+                        <or-select v-if="input.data.multiple" :name="input.data.variable" :label="input.data.label"
+                                   :placeholder="placeholder" :options="options" v-model="defaultArrayValue" :disabled="true"></or-select>
+                        <or-select v-else :name="input.data.variable" :label="input.data.label"
+                                   :placeholder="placeholder" :options="options" v-model="input.data.defaultValue"
+                                   :disabled="true"></or-select> -->
         </div>
 
         <or-modal ref="selectModal" :remove-close-button="true"
@@ -73,7 +74,7 @@
     import Vue from 'vue';
 
     import base from './_design_base';
-    import editor from './editors/select';
+    import editor from '../editors/select';
 
     export default {
         extends : base,
@@ -150,16 +151,16 @@
     export const component = 'formSelect';
     export const label = 'Drop down';
     export const data = {
-        defaultArrayValue: [],
-        defaultValue: '',
-        label: '',
-        multiple: false,
-        options: [],
-        placeholder: '',
-        helpText: '',
-        variable: '',
-        renderCondition: '',
-        validateRequired: false
+        defaultArrayValue : [],
+        defaultValue      : '',
+        label             : '',
+        multiple          : false,
+        options           : [],
+        placeholder       : '',
+        helpText          : '',
+        variable          : '',
+        renderCondition   : '',
+        validateRequired  : false
     };
 
     export const metaType = 'onereach.studio.form.input';

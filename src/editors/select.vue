@@ -20,7 +20,8 @@
 </template>
 
 <script>
-    import {validators} from '../../validators';
+    import {validators} from '../validators';
+
     const {required} = validators;
 
     import base from './_editor_base.vue';
@@ -36,12 +37,21 @@
             }
         },
         validations () {
-            if (!this.renderCondition) {value : {}};
             return {
-                value : {
-                    ... this.template.validateRequired ? {required} : {},
-                }
+                value : validator(this.template, this.renderCondition)
             };
         }
+    };
+
+    export const validator = (template, renderCondition) => {
+        return renderCondition ? {
+            ... template.validateRequired ? {required} : {},
+        } : {}
+    };
+
+    export const meta = {
+        name    : 'formSelect',
+        type    : 'onereach-studio-form-editor',
+        version : '1.0'
     };
 </script>

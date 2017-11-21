@@ -164,19 +164,26 @@ export default [
 
 export default [
     require('./src/inputs/code'),
+    require('./src/editors/code'),
     require('./src/inputs/collapsible_group'),
+    require('./src/editors/collapsible_group'),
     require('./src/inputs/data_out'),
+    require('./src/editors/data_out'),
     // // require('./src/inputs/dividier'),
     // // require('./src/inputs/dynamic_exits'),
     require('./src/inputs/header'),
+    require('./src/editors/header'),
     require('./src/inputs/list'),
+    require('./src/editors/list'),
     // // require('./src/inputs/select'),
     // // require('./src/inputs/switch'),
     // // require('./src/inputs/text_message'),
     // // require('./src/inputs/text_reprompt'),
     require('./src/inputs/textbox'),
+    require('./src/editors/textbox'),
     // // require('./src/inputs/voice_reprompt'),
-    require('./src/inputs/wildcard')
+    require('./src/inputs/wildcard'),
+    require('./src/editors/wildcard')
     // // require('./src/luis/wrapper')
 ];
 

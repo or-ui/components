@@ -19,7 +19,8 @@
 </template>
 
 <script>
-    import {validators} from '../../validators';
+    import {validators} from '../validators';
+
     const {required, jsExpression, jsExpressionNonEmptyString} = validators;
 
     import base from './_editor_base';
@@ -33,13 +34,22 @@
             }
         },
         validations () {
-            if (!this.renderCondition) {value : {}};
             return {
-                value : {
-                    jsExpression,
-                    ... this.template.validateRequired ? {required, jsExpressionNonEmptyString} : {}
-                }
+                value : validator(this.template, this.renderCondition)
             };
         }
     }
+
+    export const validator = (template, renderCondition) => {
+        return renderCondition ? {
+            jsExpression,
+            ... template.validateRequired ? {required, jsExpressionNonEmptyString} : {}
+        } : {}
+    };
+
+    export const meta = {
+        name    : 'formTextBox',
+        type    : 'onereach-studio-form-editor',
+        version : '1.0'
+    };
 </script>

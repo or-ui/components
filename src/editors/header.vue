@@ -6,6 +6,12 @@
     export default {
         props: ['template']
     };
+
+    export const meta = {
+        name    : 'formHeader',
+        type    : 'onereach-studio-form-editor',
+        version : '1.0'
+    };
 </script>
 
 

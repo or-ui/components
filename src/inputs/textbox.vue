@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="wrapper" @click="$refs.textboxModal.open()">
-            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            <editor :template="input.data" :schema="defaultStep.data" :step="defaultStep" :steps="[defaultStep]"
+                    :readonly="readonly">
             </editor>
         </div>
 
@@ -47,7 +48,7 @@
 
 <script type="text/babel">
     import base from './_design_base';
-    import editor from './editors/textbox';
+    import editor from '../editors/textbox';
 
     export default {
         extends : base,

@@ -1,7 +1,8 @@
 <template>
     <div class="code-input-component-wrapper">
         <div class="or-code-wrapper wrapper" @click.prevent="$refs.codeSettings.open()">
-            <editor :template="input.data" :step="defaultStep" :steps="[defaultStep]" :readonly="readonly">
+            <editor :template="input.data" :schema="defaultStep.data" :step="defaultStep" :steps="[defaultStep]"
+                    :readonly="readonly">
             </editor>
         </div>
 
@@ -55,7 +56,7 @@
 
 <script>
     import base from './_design_base.vue';
-    import editor from './editors/code.vue';
+    import editor from '../editors/code.vue';
 
     export default {
         extends : base,

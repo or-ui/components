@@ -8,6 +8,7 @@
                 </span>
                 <editor @click.native.prevent
                         :template="input.data"
+                        :schema="defaultStep.data"
                         :step="safeStep"
                         :steps="[safeStep]"
                         :readonly="true">
@@ -93,7 +94,7 @@
     // import stepMessageBus from '../../../../../../step_message_bus';
     import {validators} from '../validators';
     import Vue from 'vue';
-    import editor from './editors/wildcard.vue';
+    import editor from '../editors/wildcard.vue';
 
     export default {
         props : ['input', 'step'],
