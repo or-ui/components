@@ -50,4 +50,21 @@
             }
         }
     };
+
+    export const evalRenderCondition = (renderCondition) => {
+        return renderCondition
+            // eslint-disable-next-line
+            ? new Function('schema', `return ${renderCondition};`)
+            : () => true;
+    };
+
+    // TODO: check if needed
+    export const isVisible = (schema, renderCondition) => {
+        try {
+            return evalRenderCondition(renderCondition)(schema);
+        } catch (error) {
+            console.warn('renderCondition', error, renderCondition);
+            return true;
+        }
+    }
 </script>

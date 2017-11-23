@@ -12,16 +12,17 @@
         :step-id="step.id"
         :steps="steps"
 
-        @input="$v.value.$touch()"
-        :invalid="$v.value.$error"
+        @input="$v.schema.$touch()"
+        :invalid="$v.schema.$error"
         :error="error">
     </or-text-expression>
 </template>
 
 <script>
     import {validators} from '../validators';
+    import * as _ from 'lodash';
 
-    const {required, jsExpression, jsExpressionNonEmptyString} = validators;
+    const {required, jsExpression, jsExpressionNonEmptyString, validateIf, validateInput} = validators;
 
     import base from './_editor_base';
 
@@ -29,22 +30,26 @@
         extends  : base,
         computed : {
             error () {
-                if (!this.$v.value.jsExpression) return `The ${this.fieldName} is not a valid JavaScript expression.`;
-                if (!this.$v.value.required || !this.$v.value.jsExpressionNonEmptyString) return `The ${this.fieldName} is required.`;
+                if (!this.$v.schema.jsExpression) return `The ${this.fieldName} is not a valid JavaScript expression.`;
+                if (!this.$v.schema.required || !this.$v.schema.jsExpressionNonEmptyString) return `The ${this.fieldName} is required.`;
             }
         },
         validations () {
             return {
-                value : validator(this.template, this.renderCondition)
+                schema : validator(this.template, this.renderCondition)
             };
         }
     }
 
-    export const validator = (template, renderCondition) => {
-        return renderCondition ? {
+    export const data = (template) => ({
+        [template.variable] : template.defaultValue
+    });
+
+    export const validator = (template) => {
+        return validateInput(template, {
             jsExpression,
-            ... template.validateRequired ? {required, jsExpressionNonEmptyString} : {}
-        } : {}
+            validateIf : validateIf(template.validateRequired, {required, jsExpressionNonEmptyString})
+        });
     };
 
     export const meta = {

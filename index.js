@@ -163,6 +163,9 @@ export default [
 */
 
 export default [
+    require('./src/exits/static'),
+    require('./src/exits/dynamic'),
+    require('./src/editors/form'),
     require('./src/inputs/code'),
     require('./src/editors/code'),
     require('./src/inputs/collapsible_group'),

@@ -9,9 +9,6 @@
         :drag-handle-right="template.dragHandleRight ? 'drag-handle-right' : ''"
         :add-button-label="template.addButtonLabel ? template.addButtonLabel : ''"
 
-        @input="$v.value.$touch()"
-        :invalid="$v.value.$error"
-
         :readonly="readonly">
 
         <template scope="item">
@@ -35,6 +32,8 @@
     import {mapGetters} from 'vuex';
     import * as _ from 'lodash';
 
+    const {validateInput} = validators;
+
     export default {
         extends  : base,
         computed : {
@@ -42,23 +41,17 @@
                 'getInputEditor',
                 'getValidator'
             ])
-        },
-        validations () {
-            return {value : validator(this.template, this.renderCondition, this.getValidator)};
         }
     };
 
-    export const validator = (template, renderCondition, getValidator) => {
-        const validate = _.reduce(template.inputs, (result, input) => {
-            result[input.data.variable] = getValidator(input.component)(input.data, true, getValidator); // TODO: renderCondition (true)
-            return result;
-        }, {});
+    export const data = (template) => ({
+        [template.variable] : []
+    });
 
-        return {
-            each (value, schema) {
-                return validators.each(validate)(value, schema);
-            }
-        };
+    export const validator = (template, getValidator) => {
+        return validateInput(template, {
+            $each : _.assign({}, ..._.map(template.inputs, getValidator))
+        });
     };
 
     export const meta = {

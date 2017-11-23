@@ -2,17 +2,23 @@ import * as _ from 'lodash';
 import * as vuelidators from 'vuelidate/lib/validators';
 
 export const validateBySchema = function (data, schema, siblings) {
-    return _.reduce(schema, function (result, validator, key) {             //eslint-disable-line
-        if (!result) {
-            return false;
-        }
+    return !_.some(schema, function (validator, key) {
+
         if (_.isFunction(validator)) {
-            return validator.call(this, data, siblings);                    //eslint-disable-line
+            return !validator.call(this, data, siblings);
+
         } else if (_.isObject(validator)) {
-            return validateBySchema.call(this, _.get(data, key), validator, siblings); //eslint-disable-line
+            switch (key) {
+                case '$each':
+                    return _.some(data, item => !validateBySchema.call(this, item, validator, item));
+
+                default:
+                    return !validateBySchema.call(this, _.get(data, key), validator, siblings);
+            }
         }
-        return true;
-    }.bind(this), true);                                                    //eslint-disable-line
+
+        return false;
+    }.bind(this));
 };
 
 export const validators = _.assign({}, vuelidators, {
@@ -26,6 +32,7 @@ export const validators = _.assign({}, vuelidators, {
             return false;
         }
     },
+
     jsExpression (value) {
         const body = `return (function(example){return example;})(${value});`;
         try {
@@ -36,21 +43,39 @@ export const validators = _.assign({}, vuelidators, {
             return false;
         }
     },
+
     jsExpressionNonEmptyString (value) {
         return !(/^(``|''|"")$/).test(value);
     },
+
     each (schema) {
         return function (items) {
-            return _.reduce(items, function (memo, item) {                   //eslint-disable-line
-                if (!memo) {
-                    return false;
-                }
-                return validateBySchema.call(this, item, schema, item);  //eslint-disable-line
-            }.bind(this), true);                                             //eslint-disable-line
+            return !_.some(items, function (item) { //eslint-disable-line
+                return !validateBySchema.call(this, item, schema, item);  //eslint-disable-line
+            }.bind(this)); //eslint-disable-line
         };
     },
     mergeFieldName () {
         // TODO describe a valid merge field name
         return true;
+    },
+
+    validateIf (renderCondition, validator) {
+        const renderConditionFn = !_.isEmpty(renderCondition) && _.isString(renderCondition)
+            // eslint-disable-next-line
+            ? new Function('schema', `return ${renderCondition};`)
+            : () => _.isEmpty(renderCondition) || renderCondition;
+
+        return (value, schema) => {
+            return !renderConditionFn(schema) || validateBySchema.call(this, value, validator, schema);
+        }
+    },
+
+    validateInput (template, validator) {
+        return {
+            [template.variable] : {
+                validateIf : validators.validateIf(template.renderCondition, validator)
+            }
+        };
     }
 });
