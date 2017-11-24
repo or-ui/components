@@ -61,13 +61,25 @@ export const validators = _.assign({}, vuelidators, {
     },
 
     validateIf (renderCondition, validator) {
-        const renderConditionFn = !_.isEmpty(renderCondition) && _.isString(renderCondition)
-            // eslint-disable-next-line
-            ? new Function('schema', `return ${renderCondition};`)
-            : () => _.isEmpty(renderCondition) || renderCondition;
+        if (_.isString(renderCondition) && _.isEmpty(renderCondition)) {
+            renderCondition = true;
+        }
+
+        let renderConditionFn;
+        if (_.isBoolean(renderCondition)) {
+            renderConditionFn = renderCondition ? () => true : () => false;
+        }
+
+        if (_.isString(renderCondition)) {
+            renderConditionFn = new Function('schema', `return ${renderCondition};`);
+        }
+
+        if (!renderConditionFn) {
+            renderConditionFn = renderCondition;
+        }
 
         return (value, schema) => {
-            return !renderConditionFn(schema) || validateBySchema.call(this, value, validator, schema);
+            return !renderConditionFn.bind(this)(schema) || validateBySchema.call(this, value, validator, schema);
         }
     },
 
