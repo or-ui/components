@@ -34,12 +34,13 @@
         },
         validations () {
             return {
-                value : validator(this.template, this.renderCondition)
+                value : validator(this.template)
             };
         }
     };
 
-    export const validator = (template, renderCondition) => {
+    export const validator = (template) => {
+        throw new Error('TODO: CODE');
         return renderCondition ? {
             ... template.validateCode ? {jsCode} : {},
             ... template.validateExpression ? {jsExpression} : {},

@@ -4,8 +4,11 @@
 
 <script>
     export default {}
-    // TODO: implement this class
-    export const data = (template) => ({});
+    export const data = (template) => {
+        return {
+            dynamicExitsArrayStart : template.index
+        };
+    };
 
     export const meta = {
         name    : 'exitDynamic',

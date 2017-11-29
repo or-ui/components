@@ -1,6 +1,5 @@
 <template>
-    <or-text-expression
-        v-if="renderCondition"
+    <or-textbox
         v-model="value"
 
         :readonly="readonly"
@@ -15,23 +14,32 @@
         @input="$v.schema.$touch()"
         :invalid="$v.schema.$error"
         :error="error">
-    </or-text-expression>
+    </or-textbox>
 </template>
 
 <script>
-    import {validators} from '../validators';
+    import {validators} from '../../validators';
     import * as _ from 'lodash';
 
-    const {required, jsExpression, jsExpressionNonEmptyString, validateIf, validateInput} = validators;
+    const {required, validateIf, validateInput} = validators;
 
-    import base from './_editor_base';
+    //import base from '../_editor_base';
 
     export default {
-        extends  : base,
+        props     : ['template', 'schema', 'step', 'steps', 'readonly'],
+
         computed : {
+            value : {
+                get () {
+                    return this.schema['exitLabel'] || '';
+                },
+                set (value) {
+                    this.$set(this.schema, 'exitLabel', value);
+                }
+            },
+
             error () {
-                if (!this.$v.schema.jsExpression) return `The ${this.fieldName} is not a valid JavaScript expression.`;
-                if (!this.$v.schema.required || !this.$v.schema.jsExpressionNonEmptyString) return `The ${this.fieldName} is required.`;
+                if (!this.$v.schema.required) return `The ${this.fieldName} is required.`;
             }
         },
         validations () {
@@ -42,18 +50,17 @@
     }
 
     export const data = (template) => ({
-        [template.variable] : template.defaultValue
+        'exitLabel' : template.defaultValue
     });
 
     export const validator = (template) => {
-        return validateInput(template, {
-            jsExpression,
-            validateIf : validateIf(template.validateRequired, {required, jsExpressionNonEmptyString})
-        });
+        return {
+            'exitLabel' : validateIf('', {required}) // TODO renderCondition
+        };
     };
 
     export const meta = {
-        name    : 'formTextBox',
+        name    : 'dynamicExitLabel',
         type    : 'onereach-studio-form-editor',
         version : '1.0'
     };

@@ -52,6 +52,20 @@
             }
         }
     };
+
+    export const label = '';
+    export const data = {
+        defaultValue : '',
+        label        : '',
+        placeholder  : 'label',
+        helpText     : 'Exit label.'
+    };
+
+    export const meta = {
+        name    : 'dynamicExitLabel',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">

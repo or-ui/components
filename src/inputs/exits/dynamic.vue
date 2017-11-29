@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        props : ['exit', 'index'],
+        props : ['input', 'index'],
         created () {
             this.updateIndex();
         },
@@ -23,6 +23,15 @@
                 deep : true
             }
         }
+    };
+
+    export const label = '';
+    export const data = {};
+
+    export const meta = {
+        name    : 'exitDynamic',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 

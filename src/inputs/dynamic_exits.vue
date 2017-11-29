@@ -5,7 +5,10 @@
             <ul class="form-dynamic-exits step-input-list" v-dragula="inputs" bag="inputs">
                 <li :class="`design-${input.component}`" v-for="(input, index) in inputs" :key="input.id">
                     <or-icon class="handle" icon="drag_handle"></or-icon>
-                    <component :is="`design-${input.component}`" :input.sync="input"></component>
+                    <component :is="getInputDesign(input.component)"
+                               :step="step"
+                               :input="input">
+                    </component>
                     <or-icon-button type="flat" icon="close" class="remove-btn"
                                     @click="removeInput(index)">
                     </or-icon-button>
@@ -78,16 +81,21 @@
 
 <script>
     import * as _ from 'lodash';
+    import base from './_design_base.vue';
     import dynamicExitLabel from './exits/label';
+    import {mapGetters} from 'vuex';
     import {messageBus} from 'or-ui';
     import uuid from 'uuid';
 
     export default {
-        components : {
-            'design-dynamicExitLabel': dynamicExitLabel
-        },
+        extends    : base,
 
         computed : {
+            ...mapGetters('plugins', [
+                'getInputDesign',
+                'getAvailableInputs'
+            ]),
+
             header () {
                 return this.input.data.label ? `${this.input.data.label} (Dynamic Exits)` : 'Dynamic Exits';
             },
@@ -98,6 +106,10 @@
 
             popupHeader () {
                 return `${this.input.data.label} Dynamic Exits Settings`;
+            },
+
+            availableInputs () {
+                return this.getAvailableInputs();
             },
 
             usableInputs () {
@@ -140,7 +152,38 @@
             }
         },
 
-        props : ['input', 'availableInputs']
+        props : ['input']
+    };
+
+
+    export const label = 'List';
+    export const data = {
+        label           : '',
+        variable        : 'conditions',
+        addButtonLabel  : '',
+        dragHandleRight : '',
+        hasDefaultItem  : '',
+        renderCondition : '',
+        singleline      : false,
+        labelFunction   : 'return item.exitLabel',
+        inputs          : [
+            {
+                component : 'dynamicExitLabel',
+                data      : {
+                    defaultValue : '',
+                    label        : '',
+                    placeholder  : 'label',
+                    helpText     : 'Exit label.'
+                },
+                label     : 'Exit label'
+            }
+        ]
+    };
+
+    export const meta = {
+        name    : 'formDynamicExits',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 
