@@ -48,7 +48,6 @@
             ]),
 
             stepData () {
-                console.log('_____________', this.template.inputs);
                 return _.merge({}, ..._.map(this.template.inputs, input => this.getInputData(input)));
             }
         },

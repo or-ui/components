@@ -11,7 +11,7 @@
 
         methods : {
             updateIndex () {
-                this.exit.data.index = this.index;
+                this.input.data.index = this.index;
             }
         },
 
