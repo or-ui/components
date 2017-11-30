@@ -19,6 +19,7 @@
     import {mapGetters} from 'vuex';
 
     export default {
+        name     : 'edit-form',
         props    : ['stepTemplate', 'schema', 'step', 'steps', 'stepId', 'readonly', 'isNew'],
         computed : {
             ...mapGetters('plugins', [

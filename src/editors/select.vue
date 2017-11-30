@@ -27,6 +27,7 @@
     import base from './_editor_base.vue';
 
     export default {
+        name     : 'edit-select',
         extends  : base,
         computed : {
             defaultValue () {

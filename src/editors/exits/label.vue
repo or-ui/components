@@ -26,7 +26,8 @@
     //import base from '../_editor_base';
 
     export default {
-        props     : ['template', 'schema', 'step', 'steps', 'readonly'],
+        name  : 'edit-exit-label',
+        props : ['template', 'schema', 'step', 'steps', 'readonly'],
 
         computed : {
             value : {

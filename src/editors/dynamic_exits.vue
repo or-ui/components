@@ -39,6 +39,7 @@
     const {validateInput} = validators;
 
     export default {
+        name     : 'edit-dynamic-exits',
         extends  : base,
         computed : {
             ...mapGetters('plugins', [

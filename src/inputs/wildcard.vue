@@ -94,10 +94,11 @@
     // import stepMessageBus from '../../../../../../step_message_bus';
     import {validators} from '../validators';
     import Vue from 'vue';
+    import base from './_design_base';
     import editor from '../editors/wildcard.vue';
 
     export default {
-        props : ['input', 'step'],
+        extends : base,
 
         components : {
             declareTemplates,
@@ -139,7 +140,7 @@
 
     export const label = 'Wildcard';
     export const data = {
-        formTemplate            : '<custom v-model="schema.stepVariable"></custom>',
+        formTemplate            : '<wildcard v-model="schema.stepVariable"></wildcard>',
         componentTemplate       : '<div><or-textbox name="wildcardInput" label="wildcard Input Label" v-model="computedValue"></or-textbox></div>',
         componentLogic          :
             "{\n  computed : {\n    computedValue : {\n      get () { return this.value; },\n      set (value) { this.$emit('input', value); }\n    }\n  },\n  props : {\n    value : {\n      type : String,\n      default : ''\n    }\n  }\n}",

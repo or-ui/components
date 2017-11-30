@@ -4,7 +4,8 @@
 
 <script>
     export default {
-        props: ['template']
+        name  : 'edit-header',
+        props : ['template']
     };
 
     export const meta = {

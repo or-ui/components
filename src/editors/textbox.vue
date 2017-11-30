@@ -27,6 +27,7 @@
     import base from './_editor_base';
 
     export default {
+        name     : 'edit-textbox',
         extends  : base,
         computed : {
             error () {

@@ -26,6 +26,7 @@
     import base from './_editor_base';
 
     export default {
+        name     : 'edit-dataout',
         extends  : base,
         computed : {
             error () {

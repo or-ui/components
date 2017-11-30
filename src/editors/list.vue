@@ -35,6 +35,7 @@
     const {validateInput} = validators;
 
     export default {
+        name     : 'edit-list',
         extends  : base,
         computed : {
             ...mapGetters('plugins', [

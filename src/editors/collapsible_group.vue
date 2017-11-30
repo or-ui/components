@@ -23,6 +23,7 @@
     import {mapGetters} from 'vuex';
 
     export default {
+        name     : 'edit-collapsible',
         extends  : base,
         computed : {
             ...mapGetters('plugins', [
