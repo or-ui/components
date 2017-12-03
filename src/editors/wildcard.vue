@@ -1,5 +1,4 @@
 <template>
-    <!--<div>Wildcard?</div>-->
     <component :is="wildcardWrapper"
                :schema="schema"
                :step="step"
@@ -15,15 +14,20 @@
     import timestring from 'timestring';
     import uuid from 'uuid';
     import Vue from 'vue';
-    import * as vueTemplateCompiler from 'vue-template-compiler';
+    import _applyStyles from '_applyStyles';
+
+    const componentRandomNamePartLength = 16;
 
     export default {
         name     : 'edit-wildcard',
         computed : {
             componentName () {
-                // extract component name as name of root element
-                const match = /^\s*<\s*([^>\s]+)/.exec(this.template.formTemplate);
-                return match && match[1] || 'wildcard';
+//                // extract component name as name of root element
+//                const match = /^\s*<\s*([^>\s]+)/.exec(this.template.formTemplate);
+//                return match && match[1] || 'wildcard';
+                const letters = 'abcdefghijklmnopqrstuvwxyz';
+                const id = _.sampleSize(letters, componentRandomNamePartLength).join('');
+                return `or-wildcard-${id}`;
             },
 
             wildcardWrapper () {
@@ -65,11 +69,11 @@
                 const style = template.componentOriginalStyles
                     ? `.${this.componentName} {\n${template.componentOriginalStyles}\n}`
                     : '';
-                const validators = _.trim(template.validators).replace(/\n/ig, '').replace(/^\{(.*)\}$/ig, '$1');
+                _applyStyles('.', this.componentName, [{content : style, scoped : false}]);
+                //const validators = _.trim(template.validators).replace(/\n/ig, '').replace(/^\{(.*)\}$/ig, '$1');
                 return _.assign({
                     name : this.componentName,
-                    validators,
-                    style
+                  //  validators
                 }, component);
             },
 
@@ -140,7 +144,15 @@
     };
 
     export const validator = (template) => {
-        return {}; // TODO::
+        let validators = {};
+        try {
+            const getValidators = new Function(`return ${template.validators}`);
+            validators = getValidators();
+
+        } catch (error) {
+            console.error('Could not convert validators to object', error);
+        }
+        return validators;
     };
 
     export const meta = {

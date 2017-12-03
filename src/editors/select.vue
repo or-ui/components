@@ -9,12 +9,13 @@
         :multiple="template.multiple"
         :readonly="readonly"
         :options="template.options"
+        :placeholder="template.placeholder"
 
         :step-id="step.id"
         :steps="steps"
 
-        @input="$v.value.$touch()"
-        :invalid="$v.value.$error"
+        @input="$v.schema.$touch()"
+        :invalid="$v.schema.$error"
         :error="error">
     </or-select>
 </template>
@@ -22,7 +23,7 @@
 <script>
     import {validators} from '../validators';
 
-    const {required} = validators;
+    const {required, validateInput, validateIf} = validators;
 
     import base from './_editor_base.vue';
 
@@ -31,24 +32,43 @@
         extends  : base,
         computed : {
             defaultValue () {
-                return this.template.multiple ? this.template.defaultArrayValue : this.template.defaultValue;
+                return this.template.multiple
+                    ? this.template.defaultArrayValue
+                    : this.template.defaultValue;
             },
+
+            value : {
+                get () {
+                    return this.template.multiple
+                        ? this.schema[this.template.variable] || this.template.defaultArrayValue
+                        : this.schema[this.template.variable] || this.template.defaultValue;
+                },
+                set (value) {
+                    this.$set(this.schema, this.template.variable, value);
+                }
+            },
+
             error () {
-                if (!this.$v.value.required) return `The ${this.fieldName} is required.`;
+                if (!this.$v.schema.required) return `The ${this.fieldName} is required.`;
             }
         },
         validations () {
             return {
-                value : validator(this.template)
+                schema : validator(this.template)
             };
         }
     };
 
+    export const data = (template) => ({
+        [template.variable] : template.multiple
+            ? template.defaultArrayValue
+            : template.defaultValue
+    });
+
     export const validator = (template) => {
-        throw new Error('TODO SELECT');
-        return renderCondition ? {
-            ... template.validateRequired ? {required} : {},
-        } : {}
+        return validateInput(template, {
+            validateIf : validateIf(template.validateRequired, {required})
+        });
     };
 
     export const meta = {

@@ -158,7 +158,7 @@
         label             : '',
         multiple          : false,
         options           : [],
-        placeholder       : '',
+        placeholder       : 'Select Field (Drop down)',
         helpText          : '',
         variable          : '',
         renderCondition   : '',
