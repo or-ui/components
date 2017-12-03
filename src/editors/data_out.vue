@@ -12,8 +12,8 @@
         :step-id="step.id"
         :steps="steps"
 
-        @input="$v.value.$touch()"
-        :invalid="$v.value.$error"
+        @input="$v.schema.$touch()"
+        :invalid="$v.schema.$error"
         :error="error">
     </or-textbox>
 </template>
@@ -21,7 +21,7 @@
 <script>
     import {validators} from '../validators';
 
-    const {required} = validators;
+    const {required, jsIdentifier, validateIf, validateInput} = validators;
 
     import base from './_editor_base';
 
@@ -29,22 +29,37 @@
         name     : 'edit-dataout',
         extends  : base,
         computed : {
+            value : {
+                get () {
+                    return this.schema['dataOut'] || this.template.defaultName;
+                },
+                set (value) {
+                    this.$set(this.template, 'defaultName', value);
+                    this.$set(this.schema, 'dataOut', value);
+                }
+            },
+
             error () {
-                if (!this.$v.value.required) return `The ${this.fieldName} is required.`;
+                if (!this.$v.schema.required) return `The ${this.fieldName} is required.`;
+                //if (!this.$v.schema.mergeFieldName) return `The ${this.fieldName} must be a valid merge field name.`;
             }
         },
+
         validations () {
             return {
-                value : validator(this.template)
+                schema : validator(this.template)
             };
         }
     };
 
+    export const data = (template) => ({
+        'dataOut' : template.defaultName
+    });
+
     export const validator = (template) => {
-        throw new Error('TODO');
-        return renderCondition ? {
-            ... template.validateRequired ? {required} : {}
-        } : {}
+        return {
+            'dataOut' : validateIf(template.validateRequired, {required})
+        };
     };
 
     export const meta = {

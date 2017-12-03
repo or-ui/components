@@ -1,10 +1,10 @@
 <template>
-    <h4>{{template.header}}</h4>
+    <div style="border-bottom:2px solid #eee; margin:20px 0;"></div>
 </template>
 
 <script>
     export default {
-        name  : 'edit-header',
+        name  : 'edit-divider',
         props : ['template']
     };
 
@@ -13,16 +13,11 @@
     export const validator = (template) => ({});
 
     export const meta = {
-        name    : 'formHeader',
+        name    : 'formDivider',
         type    : 'onereach-studio-form-editor',
         version : '1.0'
     };
 </script>
 
 
-<style scoped lang="scss" rel="stylesheet/scss">
-    h4 {
-        line-height: 40px;
-        margin-bottom: 0;
-    }
-</style>
+<style scoped lang="scss" rel="stylesheet/scss"></style>

@@ -1,9 +1,7 @@
 <template>
     <div class="switch-input-component-wrapper">
-        <div class="wrapper" @click.stop="$refs.switchModal.open()"><or-switch :label="label"
-                                                                            :label-left="input.data.labelLeft"
-                                                                            v-model="input.data.defaultValue"
-                                                                            @click.native.prevent></or-switch></div>
+        <div class="wrapper" @click.stop="$refs.switchModal.open()"><editor :template="input.data" :schema="defaultStep.data" :step="defaultStep"
+                    :steps="[defaultStep]"></editor></div>
 
         <or-modal ref="switchModal" :remove-close-button="true" :title="popupHeader" class="form-switch-settings"
                   :contain-focus="false">
@@ -38,8 +36,15 @@
 </template>
 
 <script>
+    import editor from '../editors/switch.vue';
+    import base from './_design_base';
+
     export default {
-        props : ['input'],
+        extends : base,
+
+        components : {
+            editor
+        },
 
         computed : {
             popupHeader () {
@@ -50,6 +55,21 @@
                 return this.input.data.label || 'Switch';
             }
         }
+    };
+
+    export const label = 'Switch';
+    export const data = {
+        defaultValue    : false,
+        label           : 'Switch',
+        labelLeft       : false,
+        variable        : '',
+        renderCondition : ''
+    };
+
+    export const meta = {
+        name    : 'formSwitch',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 

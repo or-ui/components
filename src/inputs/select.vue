@@ -1,8 +1,11 @@
 <template>
     <div class="select-list-component-wrapper">
         <div class="wrapper" @click="$refs.selectModal.open()">
-            <editor :template="input.data" :step="defaultStep"
-                    :steps="[defaultStep]" :readonly="readonly">
+            <editor :template="input.data"
+                    :schema="defaultStep.data"
+                    :step="defaultStep"
+                    :steps="[defaultStep]"
+                    :readonly="readonly">
             </editor>
             <!--
                         <or-select v-if="input.data.multiple" :name="input.data.variable" :label="input.data.label"
@@ -127,7 +130,7 @@
             },
 
             defaultArrayValue () {
-                return _.map(this.input.data.defaultArrayValue, value => _.find(this.input.data.options, {value}).text).join(', ') || this.placeholder;
+                return _.map(this.input.data.defaultArrayValue, value => _.find(this.input.data.options, {value}).text).join(', '); // || this.placeholder;
             }
         },
 
@@ -148,7 +151,6 @@
         }
     };
 
-    export const component = 'formSelect';
     export const label = 'Drop down';
     export const data = {
         defaultArrayValue : [],
@@ -163,8 +165,11 @@
         validateRequired  : false
     };
 
-    export const metaType = 'onereach.studio.form.input';
-    export const metaVersion = '1.0';
+    export const meta = {
+        name    : 'formSelect',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">

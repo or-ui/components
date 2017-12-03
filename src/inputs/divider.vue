@@ -12,6 +12,15 @@
             }
         }
     };
+
+    export const label = 'Divider';
+    export const data = {};
+
+    export const meta = {
+        name    : 'formDivider',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">

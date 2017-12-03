@@ -10,8 +10,8 @@
         :step-id="step.id"
         :steps="steps"
 
-        @input="$v.value.$touch()"
-        :invalid="$v.value.$error"
+        @input="$v.schema.$touch()"
+        :invalid="$v.schema.$error"
         :error="error">
     </or-code>
 </template>
@@ -19,7 +19,7 @@
 <script>
     import {validators} from '../validators';
 
-    const {required, jsCode, jsExpression} = validators;
+    const {required, jsCode, jsExpression, validateInput, validateIf} = validators;
 
     import base from './_editor_base';
 
@@ -28,25 +28,30 @@
         extends  : base,
         computed : {
             error () {
-                if (!this.$v.value.jsCode) return `The ${this.fieldName} is not a valid JavaScript code.`;
-                if (!this.$v.value.jsExpression) return `The ${this.fieldName} is not a valid JavaScript expression.`;
-                if (!this.$v.value.required) return `The ${this.fieldName} is required.`;
+                if (!this.$v.schema.jsCode) return `The ${this.fieldName} is not a valid JavaScript code.`;
+                if (!this.$v.schema.jsExpression) return `The ${this.fieldName} is not a valid JavaScript expression.`;
+                if (!this.$v.schema.required) return `The ${this.fieldName} is required.`;
             }
         },
         validations () {
             return {
-                value : validator(this.template)
+                schema : validator(this.template)
             };
         }
     };
 
+    export const data = (template) => ({
+        [template.variable] : template.defaultValue
+    });
+
     export const validator = (template) => {
-        throw new Error('TODO: CODE');
-        return renderCondition ? {
-            ... template.validateCode ? {jsCode} : {},
-            ... template.validateExpression ? {jsExpression} : {},
-            ... template.validateRequired ? {required} : {}
-        } : {}
+        return validateInput(template, {
+            validateIf : validateIf(template.renderCondition, {
+                ... template.validateCode ? {jsCode} : {},
+                ... template.validateExpression ? {jsExpression} : {},
+                ... template.validateRequired ? {required} : {}
+            })
+        });
     };
 
     export const meta = {
