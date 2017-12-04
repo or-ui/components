@@ -1,16 +1,13 @@
 <template>
     <div class="text-message-input-component-wrapper">
-    <div class="wrapper" @click="$refs.textMessageModal.open()">
-        <or-text-message :label="label"
-                         :value="displayValue"
-                         :max-char-length="maxCharLength"
-                         :display-char-counter="input.data.displayCharCounter"
-                         :merge-field-in-use-message="input.data.mergeFieldInUseMessage"
-                         :in-char-limit-message="input.data.inCharLimitMessage"
-                         :not-in-char-limit-message="input.data.notInCharLimitMessage"
-                         :readonly="true">
-        </or-text-message>
-    </div>
+        <div class="wrapper" @click="$refs.textMessageModal.open()">
+            <editor :template="input.data"
+                    :schema="defaultStep.data"
+                    :step="defaultStep"
+                    :steps="[defaultStep]"
+                    :readonly="true">
+            </editor>
+        </div>
 
         <or-modal ref="textMessageModal" :remove-close-button="true"
                   :title="popupHeader"
@@ -52,21 +49,21 @@
             </or-textbox>
 
             <or-code v-if="input.data.displayCharCounter" mode="html"
-                        disable-variables
-                        label="Merge Field In Use message"
-                        v-model="input.data.mergeFieldInUseMessage">
+                     disable-variables
+                     label="Merge Field In Use message"
+                     v-model="input.data.mergeFieldInUseMessage">
             </or-code>
 
             <or-code v-if="input.data.displayCharCounter" mode="html"
-                        disable-variables
-                        label="In Character Limit message"
-                        v-model="input.data.inCharLimitMessage">
+                     disable-variables
+                     label="In Character Limit message"
+                     v-model="input.data.inCharLimitMessage">
             </or-code>
 
             <or-code v-if="input.data.displayCharCounter" mode="html"
-                        disable-variables
-                        label="Not In Character Limit message"
-                        v-model="input.data.notInCharLimitMessage">
+                     disable-variables
+                     label="Not In Character Limit message"
+                     v-model="input.data.notInCharLimitMessage">
             </or-code>
 
             <h2>Advanced</h2>
@@ -89,10 +86,20 @@
 </template>
 
 <script type="text/babel">
+    import base from './_design_base';
+    import editor from '../editors/text_message';
+    import {mapGetters} from 'vuex';
+
     export default {
-        props : ['input'],
+        extends    : base,
+        components : {
+            editor
+        },
 
         computed : {
+            ...mapGetters('plugins', [
+                'getInputDesign'
+            ]),
             popupHeader () {
                 return `${this.input.data.label || this.input.data.placeholder} Text message Settings`;
             },
@@ -103,13 +110,31 @@
 
             maxCharLength () {
                 return parseInt(this.input.data.maxCharLength, 10) || 0;
-            },
-
-            displayValue () {
-                const defaultValue = this.input.data.defaultValue;
-                return defaultValue.replace(/['"`]/g, '') ? defaultValue : `'${this.input.data.placeholder}'`;
             }
         }
+    };
+
+    export const label = 'Text Message';
+    export const data = {
+        defaultValue           : '``',
+        label                  : 'Text message',
+        placeholder            : '',
+        variable               : '',
+        validateRequired       : false,
+        maxCharLength          : 160,
+        displayCharCounter     : true,
+        mergeFieldInUseMessage :
+            '<p>We cannot calculate the exact amount of characters in your message because it contains a variable.</p>\n<p>There are %currentCharCount% characters excluding the variable in your message.</p>',
+        inCharLimitMessage     :
+            '<p>The character limit for an SMS message is %maxCharLength% characters.</p>\n<p>If your message contains more characters, it will be broken down into more than one SMS message.</p>',
+        notInCharLimitMessage  : 'You have exceeded amount of characters that can be sent via a single SMS.',
+        renderCondition        : ''
+    };
+
+    export const meta = {
+        name    : 'formTextMessage',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 
