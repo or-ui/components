@@ -110,7 +110,11 @@
             },
 
             usableInputs () {
-                return this.availableInputs;
+                const inputsToHide = [
+                    'formDataOut', 'formDynamicExits', 'dynamicExitLabel',
+                    'exitDynamic', 'exitStatic', 'isExit'
+                ];
+                return _.reject(this.availableInputs, input => _.includes(inputsToHide, input.component));
                 // return _.reject(this.availableInputs, 'isContainer');
             },
 

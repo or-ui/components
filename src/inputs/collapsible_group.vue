@@ -91,10 +91,11 @@
             },
 
             availableInputs () {
-                console.log('COLLPAS:::::::', this.getAvailableInputs());
-                return this.getAvailableInputs();
-                // TODO
-                //return _.reject(inputs, input => _.includes(['formCollapsible', 'formDataOut', 'formDynamicExits'], input.component));
+                const inputsToHide = [
+                    'formDataOut', 'formDynamicExits', 'dynamicExitLabel',
+                    'exitDynamic', 'exitStatic', 'isExit'
+                ];
+                return _.reject(this.getAvailableInputs(), input => _.includes(inputsToHide, input.component));
             },
 
             defaultStateLabel () {

@@ -189,10 +189,35 @@
             }
         }
     };
+
+
+    export const label = 'Text Reprompt';
+    export const data = {
+        label                : '',
+        variable             : '',
+        noReplyDelayVariable : 'noReplyDelay',
+        defaultValue         : {
+            message : '``',
+            repeat  : false
+        },
+        defaultDelay         : 3600,
+        startText            : 'Wait for reply for',
+        endText              : 'Go down the no reply path',
+        maxSections          : 3,
+        placeholder          : '',
+        repeatMessage        : 'Repeat the first message after the reprompt',
+        renderCondition      : ''
+    };
+
+    export const meta = {
+        name    : 'formTextReprompt',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
+    };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors';
+    @import '../scss/colors';
 
     .text-reprompt-input-component-wrapper {
         display: inline-block;
