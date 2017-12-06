@@ -93,7 +93,7 @@
         computed : {
             ...mapGetters('plugins', [
                 'getInputDesign',
-                'getAvailableInputs'
+                'availableInputs'
             ]),
 
             header () {
@@ -108,17 +108,8 @@
                 return `${this.input.data.label} Dynamic Exits Settings`;
             },
 
-            availableInputs () {
-                return this.getAvailableInputs();
-            },
-
             usableInputs () {
-                const inputsToHide = [
-                    'formDataOut', 'formDynamicExits', 'dynamicExitLabel',
-                    'exitDynamic', 'exitStatic', 'isExit'
-                ];
-                return _.reject(this.availableInputs, input => _.includes(inputsToHide, input.component));
-                //return _.reject(this.availableInputs, 'isContainer');
+                return _.reject(this.availableInputs, 'meta.private');
             }
         },
 
@@ -188,12 +179,13 @@
     export const meta = {
         name    : 'formDynamicExits',
         type    : 'onereach-studio-form-input',
+        private : true,
         version : '1.0'
     };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../scss/colors';
+    @import '../scss/colors.scss';
 
     .gu-mirror {
         display: none;

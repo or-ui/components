@@ -153,7 +153,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../scss/colors';
+    @import '../../scss/colors.scss';
 
     .wildcard-templates-wrapper {
         display: flex;

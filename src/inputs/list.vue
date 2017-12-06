@@ -94,7 +94,7 @@
         computed : {
             ...mapGetters('plugins', [
                 'getInputDesign',
-                'getAvailableInputs'
+                'availableInputs'
             ]),
 
             header () {
@@ -110,16 +110,7 @@
             },
 
             usableInputs () {
-                const inputsToHide = [
-                    'formDataOut', 'formDynamicExits', 'dynamicExitLabel',
-                    'exitDynamic', 'exitStatic', 'isExit'
-                ];
-                return _.reject(this.availableInputs, input => _.includes(inputsToHide, input.component));
-                // return _.reject(this.availableInputs, 'isContainer');
-            },
-
-            availableInputs () {
-                return this.getAvailableInputs();
+                return _.reject(this.availableInputs, 'meta.private');
             },
 
             defaultValue () {
@@ -187,7 +178,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../scss/colors';
+    @import '../scss/colors.scss';
 
     .gu-mirror {
         display: none;

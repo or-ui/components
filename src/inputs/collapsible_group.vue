@@ -30,7 +30,7 @@
         <or-popover ref="componentsListPopover" trigger="triggerInputsList" dropdown-position="right middle"
                     close-on-blur>
             <ul class="collapsible-group-available-inputs-list">
-                <li v-for="input in availableInputs" class="available-input">
+                <li v-for="input in publicInputs" class="available-input">
                     <or-button color="primary"
                                type="secondary"
                                class="input-component"
@@ -83,19 +83,15 @@
         computed : {
             ...mapGetters('plugins', [
                 'getInputDesign',
-                'getAvailableInputs'
+                'availableInputs'
             ]),
 
             popupHeader () {
                 return `${this.input.data.header} Collapsible Group Settings`;
             },
 
-            availableInputs () {
-                const inputsToHide = [
-                    'formDataOut', 'formDynamicExits', 'dynamicExitLabel',
-                    'exitDynamic', 'exitStatic', 'isExit'
-                ];
-                return _.reject(this.getAvailableInputs(), input => _.includes(inputsToHide, input.component));
+            publicInputs () {
+                return _.reject(this.availableInputs, 'meta.private');
             },
 
             defaultStateLabel () {
@@ -165,7 +161,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../scss/colors';
+    @import '../scss/colors.scss';
 
     .gu-mirror {
         display: none;

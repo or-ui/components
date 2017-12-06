@@ -217,7 +217,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../scss/colors';
+    @import '../scss/colors.scss';
 
     .text-reprompt-input-component-wrapper {
         display: inline-block;

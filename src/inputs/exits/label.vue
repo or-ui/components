@@ -64,6 +64,7 @@
     export const meta = {
         name    : 'dynamicExitLabel',
         type    : 'onereach-studio-form-input',
+        private : true,
         version : '1.0'
     };
 </script>

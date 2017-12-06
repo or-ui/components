@@ -77,6 +77,7 @@
     export const meta = {
         name    : 'formDataOut',
         type    : 'onereach-studio-form-input',
+        private : true,
         version : '1.0'
     };
 </script>

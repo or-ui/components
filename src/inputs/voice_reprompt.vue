@@ -190,7 +190,7 @@
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors';
+    @import '../../../../../../scss/colors.scss';
 
     .voice-reprompt-input-component-wrapper {
         display: inline-block;

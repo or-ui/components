@@ -25,6 +25,7 @@
     export const meta = {
         name    : 'exitStatic',
         type    : 'onereach-studio-form-input',
+        private : true,
         version : '1.0'
     };
 </script>
