@@ -1,9 +1,9 @@
 <script>
     export default {
         beforeMount () {
-            if (typeof this.value === "undefined") {
-                this.value = this.defaultValue;
-            }
+//            if (typeof this.value === "undefined") {
+//                this.value = this.defaultValue;
+//            }
         },
         computed : {
             defaultValue () {

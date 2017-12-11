@@ -1,18 +1,14 @@
 <template>
-    <div class="voice-reprompt-input-component-wrapper">
+    <div class="text-reprompt-input-component-wrapper">
         <div class="wrapper" @click="$refs.voiceRepromptModal.open()">
-            <span>Voice reprompt</span>
+            <span>Text reprompt</span>
             <div class="component-wrapper">
-                <component
-                    :is="componentTempName"
-                    :label="input.data.label"
-                    readonly
-                    v-model="exampleValue"
-                    :default-delay="defaultDelayNumber"
-                    :start-text="input.data.startText"
-                    :end-text="input.data.endText"
-                    :max-sections="maxSections">
-                </component>
+                <editor :template="input.data"
+                        :schema="defaultStep.data"
+                        :step="defaultStep"
+                        :steps="[defaultStep]"
+                        :readonly="true">
+                </editor>
                 <div class="cover"></div>
             </div>
         </div>
@@ -20,8 +16,7 @@
         <or-modal ref="voiceRepromptModal" :remove-close-button="true"
                   :title="popupHeader"
                   class="form-text-reprompt-settings"
-                  :contain-focus="false"
-                  @close="handleModalClose">
+                  :contain-focus="false">
             <or-textbox name="label" label="Label" placeholder="label text"
                         v-model="input.data.label"
                         help="input label text">
@@ -36,26 +31,39 @@
                         help="name of variable in the code">
             </or-textbox>
 
+            <or-textbox name="addAudioText" label="Add Audio Button Label" placeholder="enter text"
+                        v-model="input.data.addAudioText"
+                        help="Add Audio Button Label Text">
+            </or-textbox>
+
             <or-textbox name="placeholder" label="Placeholder" placeholder="enter placeholder"
                         v-model="input.data.placeholder"
                         help="input placeholder text">
             </or-textbox>
 
-            <or-voice-reprompt-bubble label="Default Message" placeholder="enter default reprompt message"
-                                      :repeat-message="input.data.repeatMessage"
-                                      v-model="input.data.defaultValue">
-            </or-voice-reprompt-bubble>
+            <or-voice-reprompt
+                label="Default Value"
+                :placeholder="input.data.placeholder"
+                v-model="input.data.defaultValue"
+                :no-reply-delay="defaultDelayNumber"
+                :default-delay="defaultDelayNumber"
+                :start-text="input.data.startText"
+                :end-text="input.data.endText"
+                :max-sections="maxSections"
+                :add-audio-text="input.data.addAudioText"
+                :repeat-message="input.data.repeatMessage">
+            </or-voice-reprompt>
 
             <or-textbox name="Default_Reprompt_Delay" label="Default reprompt delay" placeholder="enter number"
                         validation-rules="integer|max:60|min:0"
                         v-model="input.data.defaultDelay"
-                        help-text="input default reprompt delay in seconds (maximum 60)">
+                        help="input default reprompt delay in seconds (maximum 60)">
             </or-textbox>
 
             <or-textbox name="Maximum_Number_of_Reprompt_Attempts" label="Maximum number of reprompt attempts"
                         placeholder="enter number"
                         v-model="input.data.maxSections" validation-rules="integer|min:0"
-                        help-text="input maximum number of reprompt attempts">
+                        help="input maximum number of reprompt attempts">
             </or-textbox>
 
             <or-textbox name="startText" label="Wait for reply for label text" placeholder="enter text"
@@ -91,35 +99,17 @@
 </template>
 
 <script>
-    import * as _ from 'lodash';
-    import later from 'later';
-    import moment from 'moment-timezone';
-    import Promise from 'bluebird';
-    import registerComponent from '../../../../../../helpers/register_component';
-    import stepMessageBus from '../../../../../../step_message_bus';
-    import timestring from 'timestring';
-    import uuid from 'uuid';
-    import voiceRepromptCompiler from '../../../../../../mixins/generate_step_form/voice_reprompt';
-    import Vue from 'vue';
+    import base from './_design_base';
+    import editor, {data as stepData} from '../editors/voice_reprompt.vue';
+    import {mapGetters} from 'vuex';
 
-    const componentRandomNamePartLength = 16;
     const DEFAULT_DELAY = 15;
     const DEFAULT_MAX_SECTIONS = 3;
 
     export default {
-        props : ['input'],
-
-        data () {
-            return {
-                componentTempName : ''
-            };
-        },
-
-        created () {
-            if (!this.input.data.componentName) {
-                this.input.data.componentName = this.createComponentName();
-            }
-            this.updateComponentRegistration();
+        extends    : base,
+        components : {
+            editor
         },
 
         computed : {
@@ -141,58 +131,37 @@
             maxSections () {
                 return parseInt(this.input.data.maxSections, 10) || DEFAULT_MAX_SECTIONS;
             }
-        },
-
-        methods : {
-            handleModalClose () {
-                this.updateComponentRegistration();
-            },
-
-            createComponentName () {
-                const letters = 'abcdefghijklmnopqrstuvwxyz';
-                const id = _.sampleSize(letters, componentRandomNamePartLength).join('');
-                return `or-voice-reprompt-${id}`;
-            },
-
-            updateComponentRegistration () {
-                const newComponentName = this.createComponentName();
-                const componentCode = voiceRepromptCompiler.getComponent(this.input.data);
-
-                const libs = {
-                    uuid,
-                    later,
-                    moment,
-                    timestring
-                };
-                const components = {};
-                const args = {_, Vue, Promise, components, uuid, libs, eventHub : stepMessageBus};
-
-                registerComponent.register({
-                    name     : newComponentName,
-                    template : '',
-                    code     : componentCode,
-                    style    : '',
-                    args
-                })
-                    .then(() => {
-                        if (this.componentTempName) {
-                            registerComponent.unregister(this.componentTempName);
-                        }
-                        this.componentTempName = newComponentName;
-                        this.componentLogicError = false;
-                    })
-                    .catch(() => {
-                        this.componentLogicError = true;
-                    });
-            }
         }
+    };
+
+
+    export const label = 'Voice Reprompt';
+    export const data = {
+        label: '',
+        variable: '',
+        noReplyDelayVariable: 'noReplyDelay',
+        defaultValue: [],
+        defaultDelay: 15,
+        startText: 'Wait for reply for',
+        endText: 'Go down the no reply path',
+        maxSections: 3,
+        placeholder: 'Enter text to read here (in case recorded sound not available)',
+        addAudioText: 'Click to add audio',
+        repeatMessage: 'Repeat the first message after the reprompt',
+        renderCondition: ''
+    };
+
+    export const meta = {
+        name    : 'formVoiceReprompt',
+        type    : 'onereach-studio-form-input',
+        version : '1.0'
     };
 </script>
 
 <style scoped lang="scss" rel="stylesheet/scss">
-    @import '../../../../../../scss/colors.scss';
+    @import '../scss/colors.scss';
 
-    .voice-reprompt-input-component-wrapper {
+    .text-reprompt-input-component-wrapper {
         display: inline-block;
         flex-grow: 1;
         padding: 10px;
