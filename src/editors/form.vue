@@ -7,6 +7,7 @@
             is-new="isNew"
             :readonly="readonly"
             :schema="schema"
+            :step-template="stepTemplate"
             :step="step"
             :steps="steps"
             :step-id="stepId"
