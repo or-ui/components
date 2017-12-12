@@ -92,7 +92,7 @@
     import {OrList} from 'or-ui';
     import Promise from 'bluebird';
     // import stepMessageBus from '../../../../../../step_message_bus';
-    import {validators} from '../validators';
+    import {validators} from '_validators';
     import Vue from 'vue';
     import base from './_design_base';
     import editor from '../editors/wildcard.vue';

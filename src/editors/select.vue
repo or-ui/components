@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {validators} from '../validators';
+    import {validators} from '_validators';
 
     const {required, validateInput, validateIf} = validators;
 

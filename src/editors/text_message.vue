@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {validators} from '../validators';
+    import {validators} from '_validators';
     import * as _ from 'lodash';
 
     const {required, jsExpressionNonEmptyString, validateIf, validateInput} = validators;

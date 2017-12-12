@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import {validators} from '../validators';
+    import {validators} from '_validators';
 
     const {required, jsIdentifier, validateIf, validateInput} = validators;
 

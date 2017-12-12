@@ -28,7 +28,7 @@
 
 <script>
     import base from './_editor_base';
-    import {validators} from '../validators';
+    import {validators} from '_validators';
     import {mapGetters} from 'vuex';
     import * as _ from 'lodash';
 

@@ -11,10 +11,14 @@
 <script>
     import * as _ from 'lodash';
     import Promise from 'bluebird';
+    import later from 'later';
     import timestring from 'timestring';
+    import moment from 'moment-timezone';
     import uuid from 'uuid';
     import Vue from 'vue';
-    import _applyStyles from '_applyStyles';
+    import applyStyles from '_applyStyles';
+    import validators from '_validators';
+    import stepMessageBus from '_stepMessageBus';
 
     const componentRandomNamePartLength = 16;
 
@@ -69,7 +73,7 @@
                 const style = template.componentOriginalStyles
                     ? `.${this.componentName} {\n${template.componentOriginalStyles}\n}`
                     : '';
-                _applyStyles('.', this.componentName, [{content : style, scoped : false}]);
+                applyStyles('.', this.componentName, [{content : style, scoped : false}]);
                 //const validators = _.trim(template.validators).replace(/\n/ig, '').replace(/^\{(.*)\}$/ig, '$1');
                 return _.assign({
                     name : this.componentName,
@@ -105,7 +109,13 @@
             },
 
             eval (expr) {
-                const args = {_, Vue, Promise, uuid};
+                const libs = {
+                    uuid,
+                    later,
+                    moment,
+                    timestring
+                };
+                const args = {_, Vue, Promise, components: [], uuid, libs, eventHub : stepMessageBus, validators};
                 return new Function(..._.keys(args), `return ${expr}`)(..._.values(args));
             },
 
