@@ -4,6 +4,7 @@
                :step="step"
                :steps="steps"
                :stepId="step.id"
+               :$v="$v"
                :readonly="readonly">
     </component>
 </template>
@@ -17,7 +18,7 @@
     import uuid from 'uuid';
     import Vue from 'vue';
     import applyStyles from '_applyStyles';
-    import validators from '_validators';
+    import {validators} from '_validators';
     import stepMessageBus from '_stepMessageBus';
 
     const componentRandomNamePartLength = 16;
@@ -29,13 +30,13 @@
 //                // extract component name as name of root element
 //                const match = /^\s*<\s*([^>\s]+)/.exec(this.template.formTemplate);
 //                return match && match[1] || 'wildcard';
+                // TODO: get name that generated in input and do not generate here
                 const letters = 'abcdefghijklmnopqrstuvwxyz';
                 const id = _.sampleSize(letters, componentRandomNamePartLength).join('');
                 return `or-wildcard-${id}`;
             },
 
             wildcardWrapper () {
-                console.log('wrapperTemplate', this.wrapperTemplate);
                 if (!this.wrapperTemplate) return {template : '<div></div>'};
 
                 const wildcard = this.compile(this.template) || {};
@@ -52,7 +53,7 @@
                         return {};
                     },
                     template : template,
-                    props    : ['readonly', 'schema', 'step', 'steps', 'stepId']
+                    props    : ['readonly', 'schema', 'step', 'steps', 'stepId', '$v']
                 };
             },
 
@@ -77,7 +78,7 @@
                 //const validators = _.trim(template.validators).replace(/\n/ig, '').replace(/^\{(.*)\}$/ig, '$1');
                 return _.assign({
                     name : this.componentName,
-                  //  validators
+                    //  validators
                 }, component);
             },
 
@@ -87,7 +88,7 @@
                     template : this.mergeTemplate(template)
                 };
                 // console.log('logic & templ', componentLogic, componentTemplate);
-                return _.assign(this.eval(componentLogic), componentTemplate);
+                return _.assign(wildcardEvil(componentLogic), componentTemplate);
             },
 
             generateComponentLogic (template, data) {
@@ -108,17 +109,6 @@
                 return result;
             },
 
-            eval (expr) {
-                const libs = {
-                    uuid,
-                    later,
-                    moment,
-                    timestring
-                };
-                const args = {_, Vue, Promise, components: [], uuid, libs, eventHub : stepMessageBus, validators};
-                return new Function(..._.keys(args), `return ${expr}`)(..._.values(args));
-            },
-
             /**
              * Method returns html with applied styles
              * @param {Object} template - compiled template data
@@ -133,6 +123,23 @@
 
         props : ['template', 'schema', 'step', 'steps', 'readonly'],
 
+        validations () {
+            return {
+                schema : validator(this.template)
+            };
+        }
+    };
+
+    const wildcardEvil = (expr) => {
+        const libs = {
+            uuid,
+            later,
+            moment,
+            timestring
+        };
+
+        const args = {_, Vue, Promise, components : [], uuid, libs, eventHub : stepMessageBus, validators};
+        return new Function(..._.keys(args), `return ${expr}`)(..._.values(args));
     };
 
     export const data = (template) => {
@@ -154,15 +161,12 @@
     };
 
     export const validator = (template) => {
-        let validators = {};
         try {
-            const getValidators = new Function(`return ${template.validators}`);
-            validators = getValidators();
-
+            return wildcardEvil(`${template.validators}`);
         } catch (error) {
             console.error('Could not convert validators to object', error);
         }
-        return validators;
+        return {};
     };
 
     export const meta = {
